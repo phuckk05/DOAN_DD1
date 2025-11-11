@@ -14,7 +14,7 @@ class QuestionAdapter(
     private val onDelete: (Question) -> Unit
 ) : RecyclerView.Adapter<QuestionAdapter.QuestionViewHolder>() {
 
-    private var displayList = questions.toList()
+    private var displayList: List<Question> = questions
 
     inner class QuestionViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val tvQuestion: TextView = view.findViewById(R.id.tvQuestion)

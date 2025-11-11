@@ -11,15 +11,6 @@
             </PendingDiffInfo>
           </value>
         </entry>
-        <entry key="$PROJECT_DIR$/app/src/main/java/com/example/da/fragment/CreateTestFragment.kt">
-          <value>
-            <PendingDiffInfo>
-              <option name="filePath" value="$PROJECT_DIR$/app/src/main/java/com/example/da/fragment/CreateTestFragment.kt" />
-              <option name="originalContent" value="package com.example.da.fragment&#10;&#10;import android.os.Bundle&#10;import androidx.fragment.app.Fragment&#10;import android.view.LayoutInflater&#10;import android.view.View&#10;import android.view.ViewGroup&#10;import android.widget.TextView&#10;import com.example.da.R&#10;&#10;class CreateTestFragment : Fragment() {&#10;    override fun onCreateView(&#10;        inflater: LayoutInflater, container: ViewGroup?,&#10;        savedInstanceState: Bundle?&#10;    ): View? {&#10;        val view = inflater.inflate(R.layout.fragment_create_test, container, false)&#10;&#10;        // Xử lý nút back&#10;        val ivBack = view.findViewById&lt;TextView&gt;(R.id.ivBack)&#10;        ivBack.setOnClickListener {&#10;            // Quay lại fragment trước đó&#10;            requireActivity().onBackPressedDispatcher.onBackPressed()&#10;        }&#10;&#10;        return view&#10;    }&#10;}&#10;&#10;" />
-              <option name="updatedContent" value="package com.example.da.fragment&#10;&#10;import android.os.Bundle&#10;import androidx.fragment.app.Fragment&#10;import android.view.LayoutInflater&#10;import android.view.View&#10;import android.view.ViewGroup&#10;import android.widget.TextView&#10;import com.example.da.R&#10;&#10;class CreateTestFragment : Fragment() {&#10;    override fun onCreateView(&#10;        inflater: LayoutInflater, container: ViewGroup?,&#10;        savedInstanceState: Bundle?&#10;    ): View? {&#10;        val view = inflater.inflate(R.layout.fragment_create_test, container, false)&#10;        &#10;        // Xử lý nút back&#10;        val ivBack = view.findViewById&lt;TextView&gt;(R.id.ivBack)&#10;        ivBack.setOnClickListener {&#10;            // Quay lại fragment trước đó&#10;            parentFragmentManager.popBackStack()&#10;        }&#10;        &#10;        return view&#10;    }&#10;}&#10;&#10;" />
-            </PendingDiffInfo>
-          </value>
-        </entry>
       </map>
     </option>
   </component>
