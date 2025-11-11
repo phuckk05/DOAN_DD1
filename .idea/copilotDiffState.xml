@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CopilotDiffPersistence">
+    <option name="pendingDiffs">
+      <map>
+        <entry key="$PROJECT_DIR$/app/src/main/java/com/example/da/adapter/QuestionAdapter.kt">
+          <value>
+            <PendingDiffInfo>
+              <option name="filePath" value="$PROJECT_DIR$/app/src/main/java/com/example/da/adapter/QuestionAdapter.kt" />
+              <option name="updatedContent" value="package com.example.da.adapter&#10;&#10;import android.view.LayoutInflater&#10;import android.view.View&#10;import android.view.ViewGroup&#10;import android.widget.ImageView&#10;import android.widget.TextView&#10;import androidx.recyclerview.widget.RecyclerView&#10;import com.example.da.R&#10;import com.example.da.model.Question&#10;&#10;class QuestionAdapter(&#10;    private val questions: List&lt;Question&gt;,&#10;    private val onDelete: (Question) -&gt; Unit&#10;) : RecyclerView.Adapter&lt;QuestionAdapter.QuestionViewHolder&gt;() {&#10;&#10;    private var displayList = questions.toList()&#10;&#10;    inner class QuestionViewHolder(view: View) : RecyclerView.ViewHolder(view) {&#10;        val tvQuestion: TextView = view.findViewById(R.id.tvQuestion)&#10;        val tvDifficulty: TextView = view.findViewById(R.id.tvDifficulty)&#10;        val ivDelete: ImageView = view.findViewById(R.id.ivDelete)&#10;    }&#10;&#10;    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): QuestionViewHolder {&#10;        val view = LayoutInflater.from(parent.context)&#10;            .inflate(R.layout.item_question, parent, false)&#10;        return QuestionViewHolder(view)&#10;    }&#10;&#10;    override fun onBindViewHolder(holder: QuestionViewHolder, position: Int) {&#10;        val question = displayList[position]&#10;        holder.tvQuestion.text = question.text&#10;        holder.tvDifficulty.text = &quot;Mức độ: ${question.difficulty}&quot;&#10;        &#10;        holder.ivDelete.setOnClickListener {&#10;            onDelete(question)&#10;        }&#10;    }&#10;&#10;    override fun getItemCount(): Int = displayList.size&#10;&#10;    fun submitList(newList: List&lt;Question&gt;) {&#10;        displayList = newList&#10;        notifyDataSetChanged()&#10;    }&#10;}&#10;" />
+            </PendingDiffInfo>
+          </value>
+        </entry>
+        <entry key="$PROJECT_DIR$/app/src/main/java/com/example/da/fragment/CreateTestFragment.kt">
+          <value>
+            <PendingDiffInfo>
+              <option name="filePath" value="$PROJECT_DIR$/app/src/main/java/com/example/da/fragment/CreateTestFragment.kt" />
+              <option name="originalContent" value="package com.example.da.fragment&#10;&#10;import android.os.Bundle&#10;import androidx.fragment.app.Fragment&#10;import android.view.LayoutInflater&#10;import android.view.View&#10;import android.view.ViewGroup&#10;import android.widget.TextView&#10;import com.example.da.R&#10;&#10;class CreateTestFragment : Fragment() {&#10;    override fun onCreateView(&#10;        inflater: LayoutInflater, container: ViewGroup?,&#10;        savedInstanceState: Bundle?&#10;    ): View? {&#10;        val view = inflater.inflate(R.layout.fragment_create_test, container, false)&#10;&#10;        // Xử lý nút back&#10;        val ivBack = view.findViewById&lt;TextView&gt;(R.id.ivBack)&#10;        ivBack.setOnClickListener {&#10;            // Quay lại fragment trước đó&#10;            requireActivity().onBackPressedDispatcher.onBackPressed()&#10;        }&#10;&#10;        return view&#10;    }&#10;}&#10;&#10;" />
+              <option name="updatedContent" value="package com.example.da.fragment&#10;&#10;import android.os.Bundle&#10;import androidx.fragment.app.Fragment&#10;import android.view.LayoutInflater&#10;import android.view.View&#10;import android.view.ViewGroup&#10;import android.widget.TextView&#10;import com.example.da.R&#10;&#10;class CreateTestFragment : Fragment() {&#10;    override fun onCreateView(&#10;        inflater: LayoutInflater, container: ViewGroup?,&#10;        savedInstanceState: Bundle?&#10;    ): View? {&#10;        val view = inflater.inflate(R.layout.fragment_create_test, container, false)&#10;        &#10;        // Xử lý nút back&#10;        val ivBack = view.findViewById&lt;TextView&gt;(R.id.ivBack)&#10;        ivBack.setOnClickListener {&#10;            // Quay lại fragment trước đó&#10;            parentFragmentManager.popBackStack()&#10;        }&#10;        &#10;        return view&#10;    }&#10;}&#10;&#10;" />
+            </PendingDiffInfo>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>
