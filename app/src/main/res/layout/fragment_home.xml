@@ -40,6 +40,16 @@
                 android:focusable="true" />
 
         </LinearLayout>
+        <Button
+            android:id="@+id/btnStartTest"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Bắt đầu làm bài"
+            android:layout_marginBottom="16dp"
+            android:backgroundTint="#2196F3"
+            android:textColor="#FFFFFF"
+            android:padding="12dp"
+            android:textAllCaps="false"/>
 
         <!-- Danh sách đề label -->
         <TextView

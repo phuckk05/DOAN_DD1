@@ -7,14 +7,10 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.da.R
+import com.example.da.model.TestItem
 
-data class TestItem(
-    val id: Int,
-    val name: String,
-    val type: String,
-    val duration: String,
-    val iconResId: Int
-)
+
+
 
 class TestAdapter(private val testList: List<TestItem>) : RecyclerView.Adapter<TestAdapter.TestViewHolder>() {
 

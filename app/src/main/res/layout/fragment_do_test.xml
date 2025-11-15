@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FAFAFA">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:padding="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!-- Header -->
+        <LinearLayout
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:background="#E0E0E0"
+            android:padding="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp">
+            <ImageView
+                android:src="@android:drawable/ic_media_previous"
+                android:layout_width="24dp"
+                android:layout_height="24dp" />
+            <TextView
+                android:text="   Kiểm tra  môn: Lorem"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+
+        <!-- Thời gian -->
+        <TextView
+            android:id="@+id/tvTimer"
+            android:text="Thời gian: 00:00"
+            android:textSize="16sp"
+            android:gravity="center"
+            android:padding="8dp"
+            android:layout_marginBottom="10dp"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_rounded_gray" />
+
+        <!-- Câu hỏi -->
+        <TextView
+            android:id="@+id/txtQuestion"
+            android:text="Question 1: lorem is simply dummy text of the printing and typesetting industry.? "
+            android:padding="10dp"
+            android:textSize="15sp"
+            android:background="@drawable/bg_rounded_gray"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp" />
+
+        <!-- Các lựa chọn Single Choice -->
+        <RadioGroup
+            android:id="@+id/radioGroup"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:dividerHeight="8dp" />
+
+        <!-- Các lựa chọn Multi Choice -->
+        <LinearLayout
+            android:id="@+id/llOptions"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:dividerHeight="8dp" />
+
+        <!-- Điều hướng -->
+        <LinearLayout
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_marginTop="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <Button
+                android:id="@+id/btnBack"
+                android:text="Back"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/bg_rounded_gray" />
+            <Button
+                android:id="@+id/btnNext"
+                android:text="Next"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_rounded_gray" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btnSubmit"
+            android:text="Nộp bài"
+            android:layout_marginTop="16dp"
+            android:layout_width="140dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_rounded_gray" />
+    </LinearLayout>
+</ScrollView>

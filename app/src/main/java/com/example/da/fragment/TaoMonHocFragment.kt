@@ -9,15 +9,12 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import com.example.da.R
-import com.example.da.database.DatabaseHelper
-import com.example.da.model.Subject
 
 class TaoMonHocFragment : Fragment() {
 
     private lateinit var etSubjectName: EditText
     private lateinit var tvAddSubject: TextView
     private lateinit var ivBack: TextView
-    private lateinit var dbHelper: DatabaseHelper
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -28,9 +25,6 @@ class TaoMonHocFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        // Initialize database
-        dbHelper = DatabaseHelper(requireContext())
 
         // Initialize views
         etSubjectName = view.findViewById(R.id.etSubjectName)
@@ -63,36 +57,19 @@ class TaoMonHocFragment : Fragment() {
             return
         }
 
-        // Check if subject already exists
-        if (dbHelper.isSubjectExists(subjectName)) {
-            etSubjectName.error = "Môn học này đã tồn tại"
-            etSubjectName.requestFocus()
-            return
-        }
+        // TODO: Save subject to database
+        // For now, show success message
+        Toast.makeText(
+            requireContext(),
+            "Thêm môn học '$subjectName' thành công!",
+            Toast.LENGTH_SHORT
+        ).show()
 
-        // Save to database
-        val subject = Subject(name = subjectName)
-        val id = dbHelper.addSubject(subject)
+        // Clear fields
+        etSubjectName.text.clear()
 
-        if (id > 0) {
-            Toast.makeText(
-                requireContext(),
-                "Thêm môn học '$subjectName' thành công!",
-                Toast.LENGTH_SHORT
-            ).show()
-
-            // Clear fields
-            etSubjectName.text.clear()
-
-            // Navigate back
-            parentFragmentManager.popBackStack()
-        } else {
-            Toast.makeText(
-                requireContext(),
-                "Có lỗi xảy ra, vui lòng thử lại!",
-                Toast.LENGTH_SHORT
-            ).show()
-        }
+        // Navigate back
+        parentFragmentManager.popBackStack()
     }
 }
 

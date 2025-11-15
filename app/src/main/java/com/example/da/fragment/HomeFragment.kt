@@ -5,12 +5,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.da.R
 import com.example.da.adapter.TestAdapter
-import com.example.da.adapter.TestItem
+import com.example.da.model.TestItem
 
 class HomeFragment : Fragment() {
 
@@ -40,6 +41,16 @@ class HomeFragment : Fragment() {
                 .addToBackStack(null)
                 .commit()
         }
+
+        val btnStartTest = view.findViewById<Button>(R.id.btnStartTest)
+        btnStartTest.setOnClickListener {
+            // Mở MainDoTestFragment để test
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, MainDoTestFragment())
+                .addToBackStack(null)
+                .commit()
+        }
+
     }
 
     private fun setupRecyclerView() {

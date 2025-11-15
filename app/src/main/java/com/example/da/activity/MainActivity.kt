@@ -1,10 +1,12 @@
 package com.example.da.activity
 
 import android.os.Bundle
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.da.R
 import com.example.da.fragment.HomeFragment
+import com.example.da.fragment.MainDoTestFragment
 import com.example.da.fragment.ManagementFragment
 import com.example.da.fragment.ProfileFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -34,8 +36,18 @@ class MainActivity : AppCompatActivity() {
         }
 
         // Set default fragment
+//        if (savedInstanceState == null) {
+//            bottomNavigation.selectedItemId = R.id.navigation_home
+//        }
+        // Set default fragment là HomeFragment
         if (savedInstanceState == null) {
-            bottomNavigation.selectedItemId = R.id.navigation_home
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, HomeFragment())
+                .commit()
         }
+
+
+
     }
+
 }

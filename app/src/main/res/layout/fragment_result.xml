@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:padding="16dp"
+    android:background="#FAFAFA"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Header -->
+    <LinearLayout
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:background="#E0E0E0"
+        android:padding="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:src="@android:drawable/ic_media_previous"
+            android:layout_width="24dp"
+            android:layout_height="24dp" />
+        <TextView
+            android:text="   Hoàn thành bài kiểm tra"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/txtScore"
+        android:text="Điểm của bạn: 10\nSố câu đúng: 20/20"
+        android:textSize="18sp"
+        android:gravity="center"
+        android:padding="20dp"
+        android:background="@drawable/bg_rounded_gray"
+        android:layout_marginTop="20dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/btnViewAnswer"
+        android:text="Xem đáp án"
+        android:layout_marginTop="20dp"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_rounded_gray" />
+
+    <Button
+        android:id="@+id/btnMenu"
+        android:text="Trở về menu"
+        android:layout_marginTop="10dp"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_rounded_gray" />
+
+    <Button
+        android:id="@+id/btnRetry"
+        android:text="Làm lại"
+        android:layout_marginTop="10dp"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_rounded_gray" />
+</LinearLayout>

@@ -6,3 +6,6 @@ data class Question(
     val difficulty: String
 )
 
+object QuestionData {
+    val allQuestions = mutableListOf<Question>()
+}
