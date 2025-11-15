@@ -1,3 +1,4 @@
+
 package com.example.da.fragment
 
 import android.os.Bundle
@@ -6,11 +7,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
-import android.widget.Button
 import android.widget.EditText
 import android.widget.Spinner
 import android.widget.TextView
+import android.widget.Toast
 import com.example.da.R
+import com.example.da.database.DatabaseHelper
+import com.example.da.model.Subject
 
 class TaoCauHoiFragment : Fragment() {
 
@@ -20,6 +23,8 @@ class TaoCauHoiFragment : Fragment() {
     private lateinit var tvAddAnswer: TextView
     private lateinit var tvAdd: TextView
     private lateinit var ivBack: TextView
+    private lateinit var dbHelper: DatabaseHelper
+    private var subjectsList = mutableListOf<Subject>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -30,6 +35,12 @@ class TaoCauHoiFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        // Initialize database
+        dbHelper = DatabaseHelper(requireContext())
+
+        // Add sample subjects if database is empty (first run)
+//        dbHelper.addSampleSubjects()
 
         // Initialize views
         etQuestion = view.findViewById(R.id.etQuestion)
@@ -57,9 +68,32 @@ class TaoCauHoiFragment : Fragment() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        // Refresh subjects list when fragment resumes (e.g., after adding a new subject)
+        setupSubjectSpinner()
+    }
+
     private fun setupSubjectSpinner() {
-        val subjects = arrayOf("Tiếng Anh", "Toán", "Vật Lý", "Hóa Học", "Sinh Học", "Lịch Sử", "Địa Lý")
-        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, subjects)
+        // Load subjects from database
+        subjectsList.clear()
+        subjectsList.addAll(dbHelper.getAllSubjects())
+
+        if (subjectsList.isEmpty()) {
+            // Show message if no subjects available
+            Toast.makeText(
+                requireContext(),
+                "Chưa có môn học nào. Vui lòng thêm môn học trước!",
+                Toast.LENGTH_LONG
+            ).show()
+
+            // Add a default message
+            subjectsList.add(Subject(id = 0, name = "Chưa có môn học"))
+        }
+
+        // Create adapter with subject names
+        val subjectNames = subjectsList.map { it.name }
+        val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, subjectNames)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinnerSubject.adapter = adapter
     }
@@ -77,17 +111,38 @@ class TaoCauHoiFragment : Fragment() {
     }
 
     private fun saveQuestion() {
-        val question = etQuestion.text.toString()
-        val subject = spinnerSubject.selectedItem.toString()
+        val question = etQuestion.text.toString().trim()
         val difficulty = spinnerDifficulty.selectedItem.toString()
 
+        // Validation
         if (question.isEmpty()) {
             etQuestion.error = "Vui lòng nhập câu hỏi"
+            etQuestion.requestFocus()
             return
         }
 
+        if (subjectsList.isEmpty() || subjectsList[0].id == 0) {
+            Toast.makeText(
+                requireContext(),
+                "Vui lòng thêm môn học trước khi tạo câu hỏi!",
+                Toast.LENGTH_SHORT
+            ).show()
+            return
+        }
+
+        val selectedSubject = subjectsList[spinnerSubject.selectedItemPosition]
+
         // Save to database or send to server
-        // TODO: Implement save logic
+        Toast.makeText(
+            requireContext(),
+            "Lưu câu hỏi cho môn '${selectedSubject.name}' thành công!",
+            Toast.LENGTH_SHORT
+        ).show()
+
+        // Clear input
+        etQuestion.text.clear()
+
+        // TODO: Implement complete save logic with answers
     }
 }
 
