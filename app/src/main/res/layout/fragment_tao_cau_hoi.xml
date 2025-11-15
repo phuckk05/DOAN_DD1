@@ -152,36 +152,21 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <LinearLayout
+                <RadioButton
+                    android:id="@+id/rbYes"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
+                    android:text="Có" />
 
-                    <RadioButton
-                        android:id="@+id/rbYes"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Có" />
-
-                </LinearLayout>
-
-                <LinearLayout
+                <RadioButton
+                    android:id="@+id/rbNo"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical">
+                    android:checked="true"
+                    android:text="Không" />
 
-                    <RadioButton
-                        android:id="@+id/rbNo"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:checked="true"
-                        android:text="Không" />
-
-                </LinearLayout>
 
             </RadioGroup>
 
@@ -210,62 +195,6 @@
                 android:padding="12dp"
                 android:background="@drawable/card_outline_bg">
 
-                <!-- Answer 1 -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:layout_marginBottom="12dp">
-
-                    <CheckBox
-                        android:id="@+id/cbAnswer1"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
-
-                    <EditText
-                        android:id="@+id/etAnswer1"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:hint="eating ."
-                        android:textSize="14sp"
-                        android:background="@null"
-                        android:padding="8dp"
-                        android:layout_marginStart="8dp"
-                        android:textColor="#000000"
-                        android:textColorHint="#999999" />
-
-                </LinearLayout>
-
-                <!-- Answer 2 -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:layout_marginBottom="12dp">
-
-                    <CheckBox
-                        android:id="@+id/cbAnswer2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:checked="true" />
-
-                    <EditText
-                        android:id="@+id/etAnswer2"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:hint="do homework."
-                        android:textSize="14sp"
-                        android:background="@null"
-                        android:padding="8dp"
-                        android:layout_marginStart="8dp"
-                        android:textColor="#000000"
-                        android:textColorHint="#999999" />
-
-                </LinearLayout>
 
                 <!-- Add Answer Button -->
                 <LinearLayout

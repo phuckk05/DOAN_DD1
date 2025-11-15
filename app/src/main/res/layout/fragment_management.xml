@@ -54,91 +54,20 @@
         android:backgroundTint="#3D4AFA"
         android:textColor="#FFFFFF" />
 
-    <!-- Tabs -->
+    <!-- Tabs (Dynamic) -->
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:overScrollMode="never"
         android:scrollbars="none">
+
         <LinearLayout
             android:id="@+id/tabContainer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/tabAll"
-                android:layout_width="wrap_content"
-                android:layout_height="32dp"
-                android:layout_marginEnd="8dp"
-                android:paddingStart="14dp"
-                android:paddingEnd="14dp"
-                android:gravity="center_vertical"
-                android:text="@string/tab_tat_ca"
-                android:textSize="13sp"
-                android:textColor="#111111"
-                android:background="@drawable/tab_selected_bg" />
-
-            <TextView
-                android:id="@+id/tabEnglish"
-                android:layout_width="wrap_content"
-                android:layout_height="32dp"
-                android:layout_marginEnd="8dp"
-                android:paddingStart="14dp"
-                android:paddingEnd="14dp"
-                android:gravity="center_vertical"
-                android:text="@string/tab_tieng_anh"
-                android:textSize="13sp"
-                android:textColor="#111111" />
-
-            <TextView
-                android:id="@+id/tabMath"
-                android:layout_width="wrap_content"
-                android:layout_height="32dp"
-                android:layout_marginEnd="8dp"
-                android:paddingStart="14dp"
-                android:paddingEnd="14dp"
-                android:gravity="center_vertical"
-                android:text="@string/tab_toan_hoc"
-                android:textSize="13sp"
-                android:textColor="#111111" />
-
-            <TextView
-                android:id="@+id/tabHistory"
-                android:layout_width="wrap_content"
-                android:layout_height="32dp"
-                android:layout_marginEnd="8dp"
-                android:paddingStart="14dp"
-                android:paddingEnd="14dp"
-                android:gravity="center_vertical"
-                android:text="@string/tab_lich_su"
-                android:textSize="13sp"
-                android:textColor="#111111" />
-
-            <TextView
-                android:id="@+id/tabGeography"
-                android:layout_width="wrap_content"
-                android:layout_height="32dp"
-                android:layout_marginEnd="8dp"
-                android:paddingStart="14dp"
-                android:paddingEnd="14dp"
-                android:gravity="center_vertical"
-                android:text="@string/tab_dia_li"
-                android:textSize="13sp"
-                android:textColor="#111111" />
-
-            <TextView
-                android:id="@+id/tabChemistry"
-                android:layout_width="wrap_content"
-                android:layout_height="32dp"
-                android:layout_marginEnd="8dp"
-                android:paddingStart="14dp"
-                android:paddingEnd="14dp"
-                android:gravity="center_vertical"
-                android:text="@string/tab_hoa_hoc"
-                android:textSize="13sp"
-                android:textColor="#111111" />
+            <!-- Tabs will be added dynamically from database -->
         </LinearLayout>
     </HorizontalScrollView>
 
