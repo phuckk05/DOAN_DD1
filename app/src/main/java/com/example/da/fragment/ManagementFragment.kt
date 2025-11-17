@@ -5,7 +5,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
@@ -44,7 +43,7 @@ class ManagementFragment : Fragment() {
             dbHelper = DatabaseHelper(requireContext())
 
             val btnCreate = view.findViewById<MaterialButton>(R.id.btnCreateQuestion)
-            val ivAdd = view.findViewById<ImageView>(R.id.ivAddQuestion)
+            val ivAdd = view.findViewById<MaterialButton>(R.id.ivAddQuestion)
             val rv = view.findViewById<RecyclerView>(R.id.rvQuestions)
             tabContainer = view.findViewById<LinearLayout>(R.id.tabContainer)
 
@@ -201,14 +200,14 @@ class ManagementFragment : Fragment() {
             } else {
                 // Load questions for specific subject
                 val questions = dbHelper.getQuestionsBySubject(currentSubjectId)
-                allQuestions.addAll(questions)
+                allQuestions.addAll(dbHelper.getQuestionsBySubject(currentSubjectId))
             }
 
-            adapter.submitList(allQuestions.toList())
+            adapter.updateQuestions(allQuestions.toList())
         } catch (e: Exception) {
             Toast.makeText(requireContext(), "Lỗi tải câu hỏi: ${e.message}", Toast.LENGTH_SHORT).show()
             e.printStackTrace()
-            adapter.submitList(emptyList())
+            adapter.updateQuestions(emptyList())
         }
     }
 

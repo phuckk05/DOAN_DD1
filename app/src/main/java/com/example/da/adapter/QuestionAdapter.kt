@@ -40,7 +40,7 @@ class QuestionAdapter(
 
     override fun getItemCount(): Int = displayList.size
 
-    fun submitList(newList: List<Question>) {
+    fun updateQuestions(newList: List<Question>) {
         displayList = newList
         notifyDataSetChanged()
     }

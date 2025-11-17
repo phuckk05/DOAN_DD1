@@ -1,65 +1,63 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".HomeFragment">
+    android:orientation="vertical"
+    android:padding="16dp"
+    tools:context=".fragment.HomeFragment">
 
+    <!-- Header -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="16dp"
-        android:background="#F5F5F5">
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:layout_marginBottom="24dp">
 
-        <!-- Header -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_marginBottom="24dp">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Home"
-                android:textSize="28sp"
-                android:textStyle="bold"
-                android:textColor="#000000" />
-
-            <TextView
-                android:id="@+id/tvCreate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="+ Tạo đề"
-                android:textSize="14sp"
-                android:textColor="#000000"
-                android:padding="8dp"
-                android:clickable="true"
-                android:focusable="true" />
-
-        </LinearLayout>
-
-        <!-- Danh sách đề label -->
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Danh sách đề"
-            android:textSize="14sp"
-            android:textStyle="bold"
+            android:layout_weight="1"
+            android:text="Home"
             android:textColor="#000000"
-            android:layout_marginBottom="12dp" />
+            android:textSize="28sp"
+            android:textStyle="bold" />
 
-        <!-- Test List RecyclerView -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvTestList"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            tools:listitem="@layout/item_test" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/tvCreate"
+            style="@style/Widget.MaterialComponents.Button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tạo đề"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            app:backgroundTint="#3D4AFA"
+            app:cornerRadius="8dp"
+            app:icon="@drawable/ic_add_24"
+            app:iconGravity="textStart"
+            app:iconTint="@android:color/white" />
 
     </LinearLayout>
 
-</FrameLayout>
+    <!-- Danh sách đề label -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Danh sách đề"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:textColor="#000000"
+        android:layout_marginBottom="12dp" />
+
+    <!-- Test List RecyclerView -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvTestList"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        tools:listitem="@layout/item_test" />
+
+</LinearLayout>
 

@@ -1,6 +1,7 @@
 package com.example.da.activity
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.da.R
@@ -37,5 +38,10 @@ class MainActivity : AppCompatActivity() {
         if (savedInstanceState == null) {
             bottomNavigation.selectedItemId = R.id.navigation_home
         }
+    }
+
+    fun showBottomNavigation(show: Boolean) {
+        val bottomNavigation: BottomNavigationView = findViewById(R.id.bottom_navigation)
+        bottomNavigation.visibility = if (show) View.VISIBLE else View.GONE
     }
 }

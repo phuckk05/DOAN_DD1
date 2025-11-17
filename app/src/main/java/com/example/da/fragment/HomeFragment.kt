@@ -5,17 +5,21 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.da.R
 import com.example.da.adapter.TestAdapter
-import com.example.da.adapter.TestItem
+import com.example.da.database.DatabaseHelper
+import com.example.da.model.Test
+import com.google.android.material.button.MaterialButton
 
 class HomeFragment : Fragment() {
 
     private lateinit var rvTestList: RecyclerView
-    private lateinit var tvCreate: TextView
+    private lateinit var tvCreate: MaterialButton
+    private lateinit var dbHelper: DatabaseHelper
+    private lateinit var testAdapter: TestAdapter
+    private val testList = mutableListOf<Test>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -27,11 +31,14 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        dbHelper = DatabaseHelper(requireContext())
+
         rvTestList = view.findViewById(R.id.rvTestList)
         tvCreate = view.findViewById(R.id.tvCreate)
 
         // Setup RecyclerView
         setupRecyclerView()
+        loadTests()
 
         // Setup Create button click listener
         tvCreate.setOnClickListener {
@@ -42,17 +49,27 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun setupRecyclerView() {
-        // Sample data
-        val testList = listOf(
-            TestItem(1, "Toán", "Đề", "60 Phút", R.drawable.ic_home_24),
-            TestItem(2, "Lý", "Đề", "45 Phút", R.drawable.ic_home_24),
-            TestItem(3, "Hóa", "Đề", "15 Phút", R.drawable.ic_home_24),
-            TestItem(4, "Tiếng anh", "Đề", "60 Phút", R.drawable.ic_home_24)
-        )
+    override fun onResume() {
+        super.onResume()
+        loadTests()
+    }
 
-        val adapter = TestAdapter(testList)
+    private fun setupRecyclerView() {
+        testAdapter = TestAdapter(testList) { test ->
+            val fragment = TestHistoryFragment.newInstance(test.testId)
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, fragment)
+                .addToBackStack(null)
+                .commit()
+        }
         rvTestList.layoutManager = LinearLayoutManager(requireContext())
-        rvTestList.adapter = adapter
+        rvTestList.adapter = testAdapter
+    }
+
+    private fun loadTests() {
+        val tests = dbHelper.getAllTests()
+        testList.clear()
+        testList.addAll(tests)
+        testAdapter.notifyDataSetChanged()
     }
 }

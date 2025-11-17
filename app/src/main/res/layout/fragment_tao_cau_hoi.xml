@@ -19,16 +19,15 @@
             android:gravity="center_vertical"
             android:paddingBottom="16dp">
 
-            <TextView
+            <ImageView
                 android:id="@+id/ivBack"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="&lt;"
-                android:textSize="28sp"
-                android:textColor="#000000"
+                android:src="@drawable/ic_back"
                 android:padding="8dp"
                 android:clickable="true"
-                android:focusable="true" />
+                android:focusable="true"
+                android:contentDescription="@string/back_arrow"/>
 
             <TextView
                 android:layout_width="0dp"
@@ -223,4 +222,3 @@
     </LinearLayout>
 
 </ScrollView>
-

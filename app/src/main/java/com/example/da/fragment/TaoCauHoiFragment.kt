@@ -1,4 +1,3 @@
-
 package com.example.da.fragment
 
 import android.os.Bundle
@@ -19,6 +18,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import com.example.da.R
+import com.example.da.activity.MainActivity
 import com.example.da.database.DatabaseHelper
 import com.example.da.model.Subject
 
@@ -29,7 +29,7 @@ class TaoCauHoiFragment : Fragment() {
     private lateinit var spinnerDifficulty: Spinner
     private lateinit var tvAddAnswer: TextView
     private lateinit var tvAdd: TextView
-    private lateinit var ivBack: TextView
+    private lateinit var ivBack: ImageView
     private lateinit var dbHelper: DatabaseHelper
     private lateinit var answersContainer: LinearLayout
     private lateinit var rgMultipleChoice: RadioGroup
@@ -114,8 +114,14 @@ class TaoCauHoiFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+        (activity as? MainActivity)?.showBottomNavigation(false)
         // Refresh subjects list when fragment resumes (e.g., after adding a new subject)
         setupSubjectSpinner()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        (activity as? MainActivity)?.showBottomNavigation(true)
     }
 
     private fun setupSubjectSpinner() {
@@ -132,7 +138,7 @@ class TaoCauHoiFragment : Fragment() {
             ).show()
 
             // Add a default message
-            subjectsList.add(Subject(id = 0, name = "Chưa có môn học"))
+            subjectsList.add(Subject(id = 0, name = "Chưa có môn học", createdAt = 0L))
         }
 
         // Create adapter with subject names
@@ -614,4 +620,3 @@ class TaoCauHoiFragment : Fragment() {
         }
     }
 }
-

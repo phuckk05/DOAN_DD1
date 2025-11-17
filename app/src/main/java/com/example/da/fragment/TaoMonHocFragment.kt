@@ -9,6 +9,7 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import com.example.da.R
+import com.example.da.activity.MainActivity
 import com.example.da.database.DatabaseHelper
 import com.example.da.model.Subject
 
@@ -47,6 +48,16 @@ class TaoMonHocFragment : Fragment() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        (activity as? MainActivity)?.showBottomNavigation(false)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        (activity as? MainActivity)?.showBottomNavigation(true)
+    }
+
     private fun addNewSubject() {
         val subjectName = etSubjectName.text.toString().trim()
 
@@ -71,7 +82,7 @@ class TaoMonHocFragment : Fragment() {
         }
 
         // Save to database
-        val subject = Subject(name = subjectName)
+        val subject = Subject(name = subjectName, createdAt = System.currentTimeMillis())
         val id = dbHelper.addSubject(subject)
 
         if (id > 0) {
@@ -95,5 +106,3 @@ class TaoMonHocFragment : Fragment() {
         }
     }
 }
-
-

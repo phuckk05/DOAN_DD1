@@ -44,4 +44,6 @@
     <string name="sample_question">What is english ?</string>
     <string name="muc_do_de_label">Mức độ - Dễ</string>
     <string name="cd_delete_icon">Xóa câu hỏi</string>
+    <string name="num_questions_format">Số câu: %d</string>
+    <string name="duration_format">%d Phút</string>
 </resources>

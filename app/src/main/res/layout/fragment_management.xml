@@ -20,24 +20,27 @@
         android:gravity="center_vertical">
 
         <TextView
-            android:id="@+id/tvManagementTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/quan_ly_title"
-            android:textSize="28sp"
+            android:text="Quản lý"
+            android:textSize="22sp"
             android:textStyle="bold"
             android:textColor="#000000" />
 
-        <ImageView
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/ivAddQuestion"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:padding="4dp"
-            android:src="@drawable/ic_add_24"
-            android:contentDescription="@string/tao_moi_cau_hoi"
-            android:background="@android:color/transparent"
-            android:foreground="?attr/selectableItemBackgroundBorderless" />
+            style="@style/Widget.MaterialComponents.Button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tạo môn"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            app:backgroundTint="#3D4AFA"
+            app:cornerRadius="8dp"
+            app:icon="@drawable/ic_add_24"
+            app:iconGravity="textStart"
+            app:iconTint="@android:color/white" />
     </LinearLayout>
 
     <!-- Create question button -->
