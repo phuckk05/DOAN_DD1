@@ -71,7 +71,8 @@ class ManagementFragment : Fragment() {
             loadQuestionsForCurrentTab()
 
             btnCreate?.setOnClickListener { navigateToCreate(TaoCauHoiFragment()) }
-            ivAdd?.setOnClickListener { navigateToCreate(TaoMonHocFragment()) }
+            ivAdd?.text = "QL Môn" // Change text
+            ivAdd?.setOnClickListener { navigateToCreate(SubjectManagementFragment()) }
         } catch (e: Exception) {
             Toast.makeText(requireContext(), "Lỗi khởi tạo: ${e.message}", Toast.LENGTH_LONG).show()
             e.printStackTrace()

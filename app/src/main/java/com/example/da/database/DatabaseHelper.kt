@@ -212,6 +212,33 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         return result
     }
 
+    fun updateSubject(id: Int, newName: String): Int {
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put(COLUMN_NAME, newName)
+        }
+        return db.update(TABLE_SUBJECTS, values, "$COLUMN_ID = ?", arrayOf(id.toString()))
+    }
+
+    fun deleteSubjectAndQuestions(subjectId: Int) {
+        val db = writableDatabase
+        db.beginTransaction()
+        try {
+            // First, delete all questions (and their answers) associated with the subject
+            val questions = getQuestionsBySubject(subjectId)
+            for (question in questions) {
+                deleteQuestion(question.id)
+            }
+
+            // Then, delete the subject itself
+            deleteSubject(subjectId)
+
+            db.setTransactionSuccessful()
+        } finally {
+            db.endTransaction()
+        }
+    }
+
     @SuppressLint("Range")
     fun isSubjectExists(name: String): Boolean {
         val db = readableDatabase
