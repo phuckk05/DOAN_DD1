@@ -5,25 +5,22 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.da.R
-import com.example.da.activity.MainActivity
-import com.example.da.adapter.TestHistoryAdapter
+import com.example.da.adapter.AnswerAdapter
 import com.example.da.database.DatabaseHelper
 
-class TestHistoryFragment : Fragment() {
+class ViewAnswersFragment : Fragment() {
 
     private var testId: Int = -1
     private lateinit var dbHelper: DatabaseHelper
 
     private lateinit var ivBack: ImageView
     private lateinit var tvTestTitle: TextView
-    private lateinit var rvTestHistory: RecyclerView
-    private lateinit var btnStartTest: Button
+    private lateinit var rvAnswers: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,7 +34,7 @@ class TestHistoryFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_test_history, container, false)
+        return inflater.inflate(R.layout.fragment_view_answers, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -51,52 +48,27 @@ class TestHistoryFragment : Fragment() {
     private fun setControl(view: View) {
         ivBack = view.findViewById(R.id.ivBack)
         tvTestTitle = view.findViewById(R.id.tvTestTitle)
-        rvTestHistory = view.findViewById(R.id.rvTestHistory)
-        btnStartTest = view.findViewById(R.id.btnStartTest)
+        rvAnswers = view.findViewById(R.id.rvAnswers)
     }
 
     private fun setEvent() {
         val test = dbHelper.getTestById(testId)
-        tvTestTitle.text = test?.name ?: "Lịch sử làm bài"
-
-        val testResults = dbHelper.getTestResults(testId)
-        val adapter = TestHistoryAdapter(testResults) { result ->
-            val viewAnswersFragment = ViewAnswersFragment.newInstance(result.testId)
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, viewAnswersFragment)
-                .addToBackStack(null)
-                .commit()
-        }
-        rvTestHistory.adapter = adapter
-        rvTestHistory.layoutManager = LinearLayoutManager(context)
+        tvTestTitle.text = test?.name ?: "Đáp án"
 
         ivBack.setOnClickListener {
             parentFragmentManager.popBackStack()
         }
 
-        btnStartTest.setOnClickListener {
-            val doTestFragment = DoTestFragment.newInstance(testId)
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, doTestFragment)
-                .addToBackStack(null)
-                .commit()
-        }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        (activity as? MainActivity)?.showBottomNavigation(false)
-    }
-
-    override fun onPause() {
-        super.onPause()
-        (activity as? MainActivity)?.showBottomNavigation(true)
+        val questions = dbHelper.getQuestionsForTest(dbHelper.getTestById(testId)!!)
+        val adapter = AnswerAdapter(questions, dbHelper)
+        rvAnswers.adapter = adapter
+        rvAnswers.layoutManager = LinearLayoutManager(context)
     }
 
     companion object {
         @JvmStatic
         fun newInstance(testId: Int) =
-            TestHistoryFragment().apply {
+            ViewAnswersFragment().apply {
                 arguments = Bundle().apply {
                     putInt("testId", testId)
                 }

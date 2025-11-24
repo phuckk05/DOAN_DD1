@@ -70,21 +70,26 @@ class DoTestFragment : Fragment() {
         currentTest = test
         questions = dbHelper.getQuestionsForTest(currentTest)
 
+        setControl(view)
+        setEvent()
+    }
+
+    private fun setControl(view: View) {
         tvTimer = view.findViewById(R.id.tvTimer)
         tvQuestionNumber = view.findViewById(R.id.tvQuestionNumber)
         tvQuestionText = view.findViewById(R.id.tvQuestionText)
         rgAnswers = view.findViewById(R.id.rgAnswers)
         btnPrevious = view.findViewById(R.id.btnPrevious)
         btnNext = view.findViewById(R.id.btnNext)
+    }
 
-        // Dummy data for now
+    private fun setEvent() {
         if (::currentTest.isInitialized) {
             startTimer(currentTest.durationMinutes.toLong())
             displayQuestion()
         } else {
             Toast.makeText(context, "Không tìm thấy bài test", Toast.LENGTH_SHORT).show()
         }
-
 
         btnNext.setOnClickListener {
             saveUserAnswer()
@@ -114,7 +119,7 @@ class DoTestFragment : Fragment() {
         super.onPause()
         (activity as? MainActivity)?.showBottomNavigation(true)
     }
-
+	
     private fun startTimer(minutes: Long) {
         timer?.cancel()
         timer = object : CountDownTimer(minutes * 60 * 1000, 1000) {

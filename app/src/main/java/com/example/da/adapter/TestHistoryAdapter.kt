@@ -3,6 +3,7 @@ package com.example.da.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.da.R
@@ -12,7 +13,9 @@ import java.util.Date
 import java.util.Locale
 import kotlin.math.roundToInt
 
-class TestHistoryAdapter(private val testResults: List<TestResult>) :
+class TestHistoryAdapter(
+    private val testResults: List<TestResult>,
+    private val onViewAnswersClicked: (TestResult) -> Unit) :
     RecyclerView.Adapter<TestHistoryAdapter.TestHistoryViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TestHistoryViewHolder {
@@ -24,6 +27,9 @@ class TestHistoryAdapter(private val testResults: List<TestResult>) :
     override fun onBindViewHolder(holder: TestHistoryViewHolder, position: Int) {
         val result = testResults[position]
         holder.bind(result)
+        holder.itemView.findViewById<Button>(R.id.btnViewAnswers).setOnClickListener {
+            onViewAnswersClicked(result)
+        }
     }
 
     override fun getItemCount(): Int = testResults.size
