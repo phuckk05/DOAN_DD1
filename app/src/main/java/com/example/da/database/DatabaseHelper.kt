@@ -385,6 +385,30 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         return test
     }
 
+    // Add delete and update helpers for tests
+    fun deleteTest(testId: Int): Int {
+        val db = writableDatabase
+        val result = db.delete(TABLE_TESTS, "$COLUMN_TEST_ID = ?", arrayOf(testId.toString()))
+        return result
+    }
+
+    fun updateTest(testId: Int, updated: Test): Int {
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put(COLUMN_TEST_SUBJECT_ID, updated.subjectId)
+            put(COLUMN_TEST_NAME, updated.name)
+            put(COLUMN_NUM_QUESTIONS, updated.numQuestions)
+            put(COLUMN_DURATION_MINUTES, updated.durationMinutes)
+            put(COLUMN_ALLOW_MULTIPLE_ANSWERS, if (updated.allowMultipleAnswers) 1 else 0)
+            put(COLUMN_EASY_PERCENT, updated.easyPercent)
+            put(COLUMN_MEDIUM_PERCENT, updated.mediumPercent)
+            put(COLUMN_HARD_PERCENT, updated.hardPercent)
+            // Don't touch created_at
+        }
+        val result = db.update(TABLE_TESTS, values, "$COLUMN_TEST_ID = ?", arrayOf(testId.toString()))
+        return result
+    }
+
     @SuppressLint("Range")
     fun getQuestionsForTest(test: Test): List<Question> {
         val questions = mutableListOf<Question>()

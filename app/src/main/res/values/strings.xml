@@ -31,6 +31,18 @@
     <string name="nhap_so_phut_label">Nhập số phút</string>
     <string name="nhap_so_phut_hint">VD : 60.</string>
     <string name="back_arrow">‹</string>
+    <string name="cap_nhat">Cập nhật</string>
+    <string name="sua">Sửa</string>
+    <string name="sua_de">Sửa đề</string>
+    <string name="xoa">Xóa</string>
+    <string name="xoa_de">Xóa đề</string>
+    <string name="choose_test_to_edit">Chọn đề để sửa</string>
+    <string name="choose_test_to_delete">Chọn đề để xóa</string>
+    <string name="mode_create">Tạo đề</string>
+    <string name="mode_editing">Đang sửa: %1$s</string>
+    <string name="hint_test_name">Tên đề (tùy chọn)</string>
+    <string name="label_test_list">Danh sách đề</string>
+    <string name="ql_mon">QL Môn</string>
 
     <!-- Management screen strings -->
     <string name="quan_ly_title">Quản lý</string>

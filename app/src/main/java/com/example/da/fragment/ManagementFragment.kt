@@ -45,7 +45,7 @@ class ManagementFragment : Fragment() {
             val btnCreate = view.findViewById<MaterialButton>(R.id.btnCreateQuestion)
             val ivAdd = view.findViewById<MaterialButton>(R.id.ivAddQuestion)
             val rv = view.findViewById<RecyclerView>(R.id.rvQuestions)
-            tabContainer = view.findViewById<LinearLayout>(R.id.tabContainer)
+            tabContainer = view.findViewById(R.id.tabContainer)
 
             // Load subjects from database
             loadSubjects()
@@ -71,8 +71,10 @@ class ManagementFragment : Fragment() {
             loadQuestionsForCurrentTab()
 
             btnCreate?.setOnClickListener { navigateToCreate(TaoCauHoiFragment()) }
-            ivAdd?.text = "QL Môn" // Change text
+            ivAdd?.setOnClickListener { navigateToCreate(TaoMonHocFragment()) }
+            ivAdd?.text = getString(R.string.ql_mon) // Change text
             ivAdd?.setOnClickListener { navigateToCreate(SubjectManagementFragment()) }
+
         } catch (e: Exception) {
             Toast.makeText(requireContext(), "Lỗi khởi tạo: ${e.message}", Toast.LENGTH_LONG).show()
             e.printStackTrace()
@@ -200,9 +202,8 @@ class ManagementFragment : Fragment() {
                 }
             } else {
                 // Load questions for specific subject
-                val questions = dbHelper.getQuestionsBySubject(currentSubjectId)
                 allQuestions.addAll(dbHelper.getQuestionsBySubject(currentSubjectId))
-            }
+             }
 
             adapter.updateQuestions(allQuestions.toList())
         } catch (e: Exception) {
