@@ -1,6 +1,7 @@
 package com.example.da.fragment
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +10,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.commit
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.da.R
@@ -17,6 +19,7 @@ import com.example.da.database.DatabaseHelper
 import com.example.da.model.Question
 import com.example.da.model.Subject
 import com.google.android.material.button.MaterialButton
+import kotlin.text.replace
 
 class ManagementFragment : Fragment() {
     private lateinit var adapter: QuestionAdapter
@@ -37,191 +40,167 @@ class ManagementFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         try {
-            // Initialize database
+            // --- KHỞI TẠO CÁC THÀNH PHẦN CƠ BẢN ---
             dbHelper = DatabaseHelper(requireContext())
-
-            val btnCreate = view.findViewById<MaterialButton>(R.id.btnCreateQuestion)
-            val ivAdd = view.findViewById<MaterialButton>(R.id.ivAddQuestion)
-            val rv = view.findViewById<RecyclerView>(R.id.rvQuestions)
             tabContainer = view.findViewById(R.id.tabContainer)
 
-            // Load subjects from database
-            loadSubjects()
+            // --- CÀI ĐẶT RecyclerView ---
+            setupRecyclerView(view)
 
-            // Create dynamic tabs
-            createDynamicTabs()
+            // --- XỬ LÝ SỰ KIỆN CHO CÁC NÚT ĐIỀU HƯỚNG ---
+            setupNavigationButtons(view)
 
-            // Setup RecyclerView
-            adapter = QuestionAdapter(allQuestions) { question ->
-                try {
-                    // Delete question
-                    dbHelper.deleteQuestion(question.id)
-                    loadQuestionsForCurrentTab()
-                    Toast.makeText(requireContext(), "Đã xóa câu hỏi", Toast.LENGTH_SHORT).show()
-                } catch (e: Exception) {
-                    Toast.makeText(requireContext(), "Lỗi khi xóa: ${e.message}", Toast.LENGTH_SHORT).show()
-                }
-            }
-            rv.layoutManager = LinearLayoutManager(requireContext())
-            rv.adapter = adapter
-
-            // Load questions for "Tất cả" tab initially
+            // --- TẢI DỮ LIỆU LẦN ĐẦU ---
+            loadSubjectsAndCreateTabs()
             loadQuestionsForCurrentTab()
 
-            btnCreate?.setOnClickListener { navigateToCreate(TaoCauHoiFragment()) }
-            ivAdd?.setOnClickListener { navigateToCreate(TaoMonHocFragment()) }
-            ivAdd?.text = getString(R.string.ql_mon) // Change text
-            ivAdd?.setOnClickListener { navigateToCreate(SubjectManagementFragment()) }
-
         } catch (e: Exception) {
-            Toast.makeText(requireContext(), "Lỗi khởi tạo: ${e.message}", Toast.LENGTH_LONG).show()
-            e.printStackTrace()
+            Log.e("ManagementFragment", "Lỗi nghiêm trọng trong onViewCreated: ${e.message}", e)
+            Toast.makeText(requireContext(), "Lỗi khởi tạo màn hình: ${e.message}", Toast.LENGTH_LONG).show()
         }
     }
 
     override fun onResume() {
         super.onResume()
-        // Only reload if adapter is initialized
-        if (::adapter.isInitialized && ::dbHelper.isInitialized) {
-            loadSubjects()
-            createDynamicTabs()
+        // Khi quay lại màn hình này, tải lại dữ liệu để cập nhật thay đổi (ví dụ: vừa thêm môn học mới)
+        if (::dbHelper.isInitialized) {
+            loadSubjectsAndCreateTabs()
             loadQuestionsForCurrentTab()
         }
     }
 
-    private fun loadSubjects() {
-        subjectsList.clear()
-        subjectsList.addAll(dbHelper.getAllSubjects())
+    private fun setupRecyclerView(view: View) {
+        val rv = view.findViewById<RecyclerView>(R.id.rvQuestions)
+        adapter = QuestionAdapter(mutableListOf()) { question ->
+            // Xử lý sự kiện xóa câu hỏi
+            showDeleteConfirmationDialog(question)
+        }
+        rv.layoutManager = LinearLayoutManager(requireContext())
+        rv.adapter = adapter
     }
 
-    private fun createDynamicTabs() {
+    private fun setupNavigationButtons(view: View) {
+        // Nút "Xem Lịch Sử"
+        val btnGoToHistory = view.findViewById<MaterialButton>(R.id.btn_goto_history)
+        btnGoToHistory.setOnClickListener { navigateTo(HistoryFragment()) }
+
+        // Nút "Tạo Câu Hỏi"
+        val btnCreateQuestion = view.findViewById<MaterialButton>(R.id.btnCreateQuestion)
+        btnCreateQuestion.setOnClickListener { navigateTo(TaoCauHoiFragment()) }
+
+        // Nút "Quản lý Môn học"
+        val btnManageSubjects = view.findViewById<MaterialButton>(R.id.btnManageSubjects)
+        btnManageSubjects.setOnClickListener { navigateTo(SubjectManagementFragment()) }
+    }
+
+    private fun loadSubjectsAndCreateTabs() {
+        subjectsList.clear()
+        subjectsList.addAll(dbHelper.getAllSubjects())
+
+        // Tạo lại các tab động
         tabContainer.removeAllViews()
         tabViews.clear()
 
-        // Add "Tất cả" tab
+        // Thêm tab "Tất cả"
         val allTab = createTabView("Tất cả", -1)
         tabContainer.addView(allTab)
         tabViews.add(allTab)
 
-        // Add tabs for each subject
+        // Thêm tab cho từng môn học
         for (subject in subjectsList) {
             val tabView = createTabView(subject.name, subject.id)
             tabContainer.addView(tabView)
             tabViews.add(tabView)
         }
 
-         // Select first tab by default only if adapter is initialized
-        if (tabViews.isNotEmpty() && ::adapter.isInitialized) {
-            selectTab(tabViews[0], -1)
-        } else if (tabViews.isNotEmpty()) {
-            // Just highlight first tab without loading questions
-            tabViews[0].setBackgroundResource(R.drawable.tab_selected_bg)
-            tabViews[0].setTextColor(ContextCompat.getColor(requireContext(), android.R.color.white))
-            currentSubjectId = -1
-        }
+        // Chọn lại tab đang active
+        updateTabSelection()
     }
 
     private fun createTabView(text: String, subjectId: Int): TextView {
-        val tabView = TextView(requireContext()).apply {
+        return TextView(requireContext()).apply {
             this.text = text
             setPadding(dpToPx(20), dpToPx(10), dpToPx(20), dpToPx(10))
             textSize = 14f
-            setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
             setBackgroundResource(R.drawable.tab_unselected_bg)
-
-            // Add elevation/shadow
+            setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
             elevation = dpToPx(2).toFloat()
-
+            typeface = android.graphics.Typeface.DEFAULT_BOLD
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
             ).apply {
                 marginEnd = dpToPx(12)
-                topMargin = dpToPx(4)
-                bottomMargin = dpToPx(4)
             }
-
-            // Make text bold
-            typeface = android.graphics.Typeface.DEFAULT_BOLD
-
             setOnClickListener {
-                selectTab(this, subjectId)
+                currentSubjectId = subjectId
+                updateTabSelection()
+                loadQuestionsForCurrentTab()
             }
         }
-        return tabView
     }
 
-    private fun selectTab(selected: TextView, subjectId: Int) {
+    private fun updateTabSelection() {
+        val currentTabLabel = if (currentSubjectId == -1) "Tất cả" else subjectsList.find { it.id == currentSubjectId }?.name
         tabViews.forEach { tab ->
-            if (tab == selected) {
-                // Selected tab - gradient blue background
-                tab.setBackgroundResource(R.drawable.tab_selected_bg)
-                tab.setTextColor(ContextCompat.getColor(requireContext(), android.R.color.white))
-                tab.elevation = dpToPx(6).toFloat()
-
-                // Scale animation
-                tab.animate()
-                    .scaleX(1.05f)
-                    .scaleY(1.05f)
-                    .setDuration(200)
-                    .start()
-            } else {
-                // Unselected tab - light gray background
-                tab.setBackgroundResource(R.drawable.tab_unselected_bg)
-                tab.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
-                tab.elevation = dpToPx(2).toFloat()
-
-                // Reset scale
-                tab.animate()
-                    .scaleX(1.0f)
-                    .scaleY(1.0f)
-                    .setDuration(200)
-                    .start()
-            }
+            val isSelected = tab.text.toString() == currentTabLabel
+            tab.setBackgroundResource(if (isSelected) R.drawable.tab_selected_bg else R.drawable.tab_unselected_bg)
+            tab.setTextColor(ContextCompat.getColor(requireContext(), if (isSelected) android.R.color.white else R.color.black))
+            tab.elevation = dpToPx(if (isSelected) 6 else 2).toFloat()
+            tab.animate()
+                .scaleX(if (isSelected) 1.05f else 1.0f)
+                .scaleY(if (isSelected) 1.05f else 1.0f)
+                .setDuration(200)
+                .start()
         }
-        currentSubjectId = subjectId
-        loadQuestionsForCurrentTab()
     }
 
     private fun loadQuestionsForCurrentTab() {
-        // Check if adapter is initialized
-        if (!::adapter.isInitialized) {
-            return
-        }
-
+        if (!::adapter.isInitialized) return
         try {
             allQuestions.clear()
-
-            if (currentSubjectId == -1) {
-                // Load all questions from all subjects
-                for (subject in subjectsList) {
-                    val questions = dbHelper.getQuestionsBySubject(subject.id)
-                    allQuestions.addAll(questions)
-                }
+            val questions = if (currentSubjectId == -1) {
+                dbHelper.getAllQuestions()
             } else {
-                // Load questions for specific subject
-                allQuestions.addAll(dbHelper.getQuestionsBySubject(currentSubjectId))
-             }
-
-            adapter.updateQuestions(allQuestions.toList())
+                dbHelper.getQuestionsBySubject(currentSubjectId)
+            }
+            allQuestions.addAll(questions)
+            adapter.updateQuestions(allQuestions.toList()) // Cập nhật adapter với danh sách mới
         } catch (e: Exception) {
+            Log.e("ManagementFragment", "Lỗi tải câu hỏi: ${e.message}", e)
             Toast.makeText(requireContext(), "Lỗi tải câu hỏi: ${e.message}", Toast.LENGTH_SHORT).show()
-            e.printStackTrace()
-            adapter.updateQuestions(emptyList())
         }
+    }
+
+    private fun showDeleteConfirmationDialog(question: Question) {
+        androidx.appcompat.app.AlertDialog.Builder(requireContext())
+            .setTitle("Xác nhận xóa")
+            .setMessage("Bạn có chắc chắn muốn xóa câu hỏi này không?")
+            .setPositiveButton("Xóa") { _, _ ->
+                try {
+                    dbHelper.deleteQuestion(question.id)
+                    Toast.makeText(requireContext(), "Đã xóa câu hỏi", Toast.LENGTH_SHORT).show()
+                    loadQuestionsForCurrentTab() // Tải lại danh sách sau khi xóa
+                } catch (e: Exception) {
+                    Log.e("ManagementFragment", "Lỗi khi xóa câu hỏi: ${e.message}", e)
+                    Toast.makeText(requireContext(), "Lỗi khi xóa: ${e.message}", Toast.LENGTH_SHORT).show()
+                }
+            }
+            .setNegativeButton("Hủy", null)
+            .show()
     }
 
     private fun dpToPx(dp: Int): Int {
-        val density = resources.displayMetrics.density
-        return (dp * density).toInt()
+        return (dp * resources.displayMetrics.density).toInt()
     }
 
-    private fun navigateToCreate(fragment: Fragment) {
-        parentFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, fragment)
-            .addToBackStack(null)
-            .commit()
+    private fun navigateTo(fragment: Fragment) {
+        parentFragmentManager.commit {
+            setReorderingAllowed(true)
+            // Thay thế bằng ID container chuẩn trong MainActivity
+            replace(R.id.fragment_container, fragment)
+            addToBackStack(null)
+        }
     }
 }
