@@ -10,12 +10,15 @@ import com.example.da.model.Question
 import com.example.da.model.Subject
 import com.example.da.model.Test
 import com.example.da.model.TestResult
+import com.example.da.model.HistoryEntity
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
     companion object {
         private const val DATABASE_NAME = "QuizApp.db"
-        private const val DATABASE_VERSION = 5 // Incremented to trigger onUpgrade
+        private const val DATABASE_VERSION = 7 // Tăng phiên bản để kích hoạt onUpgrade
 
         // Table Subjects
         private const val TABLE_SUBJECTS = "subjects"
@@ -55,7 +58,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         private const val TABLE_TEST_RESULTS = "test_results"
         private const val COLUMN_RESULT_ID = "result_id"
         private const val COLUMN_RESULT_TEST_ID = "test_id"
-        private const val COLUMN_SCORE = "score"
+        private const val COLUMN_SCORE = "score" // REAL cho điểm thập phân
         private const val COLUMN_TIME_TAKEN_SECONDS = "time_taken_seconds"
         private const val COLUMN_RESULT_CREATED_AT = "created_at"
     }
@@ -110,7 +113,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
             CREATE TABLE $TABLE_TEST_RESULTS (
                 $COLUMN_RESULT_ID INTEGER PRIMARY KEY AUTOINCREMENT,
                 $COLUMN_RESULT_TEST_ID INTEGER NOT NULL,
-                $COLUMN_SCORE INTEGER NOT NULL,
+                $COLUMN_SCORE REAL NOT NULL, 
                 $COLUMN_TIME_TAKEN_SECONDS INTEGER NOT NULL,
                 $COLUMN_RESULT_CREATED_AT INTEGER NOT NULL,
                 FOREIGN KEY($COLUMN_RESULT_TEST_ID) REFERENCES $TABLE_TESTS($COLUMN_TEST_ID)
@@ -147,7 +150,8 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
             id?.let { subjectIds.add(it) }
         }
 
-        // Add sample tests if subjects were added
+        // Add sample tests
+        val testIds = mutableListOf<Long>()
         if (subjectIds.isNotEmpty()) {
             val test1 = ContentValues().apply {
                 put(COLUMN_TEST_SUBJECT_ID, subjectIds[0]) // Toán
@@ -160,7 +164,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
                 put(COLUMN_HARD_PERCENT, 20)
                 put(COLUMN_TEST_CREATED_AT, System.currentTimeMillis())
             }
-            db?.insert(TABLE_TESTS, null, test1)
+            testIds.add(db?.insert(TABLE_TESTS, null, test1) ?: 0L)
 
             val test2 = ContentValues().apply {
                 put(COLUMN_TEST_SUBJECT_ID, subjectIds[1]) // Vật Lý
@@ -171,11 +175,202 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
                 put(COLUMN_EASY_PERCENT, 30)
                 put(COLUMN_MEDIUM_PERCENT, 50)
                 put(COLUMN_HARD_PERCENT, 20)
-                put(COLUMN_TEST_CREATED_AT, System.currentTimeMillis())
+                put(COLUMN_TEST_CREATED_AT, System.currentTimeMillis() - 1000)
             }
-            db?.insert(TABLE_TESTS, null, test2)
+            testIds.add(db?.insert(TABLE_TESTS, null, test2) ?: 0L)
+
+            val test3 = ContentValues().apply {
+                put(COLUMN_TEST_SUBJECT_ID, subjectIds[2]) // Hóa Học
+                put(COLUMN_TEST_NAME, "Bài tập phản ứng hóa học")
+                put(COLUMN_NUM_QUESTIONS, 10)
+                put(COLUMN_DURATION_MINUTES, 30)
+                put(COLUMN_ALLOW_MULTIPLE_ANSWERS, 0)
+                put(COLUMN_EASY_PERCENT, 50)
+                put(COLUMN_MEDIUM_PERCENT, 50)
+                put(COLUMN_HARD_PERCENT, 0)
+                put(COLUMN_TEST_CREATED_AT, System.currentTimeMillis() - 2000)
+            }
+            testIds.add(db?.insert(TABLE_TESTS, null, test3) ?: 0L)
+        }
+
+        // Add sample test results for history
+        if (testIds.isNotEmpty()) {
+            // 1. Toán - Trung bình (35 phút, 8.5 điểm, Tháng 11)
+            db?.insert(TABLE_TEST_RESULTS, null, ContentValues().apply {
+                put(COLUMN_RESULT_TEST_ID, testIds[0])
+                put(COLUMN_SCORE, 8.5)
+                put(COLUMN_TIME_TAKEN_SECONDS, 35 * 60)
+                put(COLUMN_RESULT_CREATED_AT, System.currentTimeMillis() - 86400000)
+            })
+            // 2. Vật Lý - Khó (59.5 phút, 5.0 điểm, Tháng 10)
+            db?.insert(TABLE_TEST_RESULTS, null, ContentValues().apply {
+                put(COLUMN_RESULT_TEST_ID, testIds[1])
+                put(COLUMN_SCORE, 5.0)
+                put(COLUMN_TIME_TAKEN_SECONDS, 59 * 60 + 30)
+                put(COLUMN_RESULT_CREATED_AT, System.currentTimeMillis() - 30L * 86400000)
+            })
+            // 3. Hóa Học - Dễ (20 phút, 9.8 điểm, Tháng 9)
+            db?.insert(TABLE_TEST_RESULTS, null, ContentValues().apply {
+                put(COLUMN_RESULT_TEST_ID, testIds[2])
+                put(COLUMN_SCORE, 9.8)
+                put(COLUMN_TIME_TAKEN_SECONDS, 20 * 60)
+                put(COLUMN_RESULT_CREATED_AT, System.currentTimeMillis() - 60L * 86400000)
+            })
         }
     }
+
+    // --- LOGIC LỌC KHÁC (Hàm phụ trợ) ---
+
+    private fun isScoreInRange(diemString: String, range: String): Boolean {
+        return try {
+            val diem = diemString.replace(",", ".").toFloat()
+            when (range) {
+                "<5" -> diem < 5f
+                "5-6.5" -> diem >= 5f && diem <= 6.5f
+                "6.5-8" -> diem > 6.5f && diem <= 8f
+                "8-10" -> diem > 8f && diem <= 10f
+                else -> false
+            }
+        } catch (e: NumberFormatException) {
+            false
+        }
+    }
+
+    private fun isTimeInRange(timeString: String, range: String): Boolean {
+        val timeRegex = "(\\d+)\\s*phút".toRegex()
+        val match = timeRegex.find(timeString)
+        val minutes = match?.groupValues?.get(1)?.toIntOrNull() ?: 0
+
+        return when (range) {
+            "<30 phút" -> minutes < 30
+            "30-60 phút" -> minutes >= 30 && minutes <= 60
+            "60-90 phút" -> minutes > 60 && minutes <= 90
+            ">90 phút" -> minutes > 90
+            else -> false
+        }
+    }
+
+    private fun isMonthMatch(ngayLam: String, monthFilter: String): Boolean {
+        val monthCode = monthFilter.substringAfter("Tháng ").trim()
+        val month = ngayLam.substring(3, 5)
+        return month == monthCode
+    }
+
+
+    // --- HÀM HISTORY (Truy xuất và Lọc) ---
+
+    @SuppressLint("Range")
+    fun getAllHistoryEntities(): List<HistoryEntity> {
+        val historyList = mutableListOf<HistoryEntity>()
+        val db = readableDatabase
+
+        val query = """
+            SELECT 
+                tr.$COLUMN_RESULT_ID, 
+                tr.$COLUMN_SCORE, 
+                tr.$COLUMN_TIME_TAKEN_SECONDS,
+                tr.$COLUMN_RESULT_CREATED_AT,
+                t.$COLUMN_TEST_NAME,
+                s.$COLUMN_NAME AS subject_name,
+                t.$COLUMN_EASY_PERCENT,
+                t.$COLUMN_HARD_PERCENT
+            FROM $TABLE_TEST_RESULTS tr
+            JOIN $TABLE_TESTS t ON tr.$COLUMN_RESULT_TEST_ID = t.$COLUMN_TEST_ID
+            JOIN $TABLE_SUBJECTS s ON t.$COLUMN_TEST_SUBJECT_ID = s.$COLUMN_ID
+            ORDER BY tr.$COLUMN_RESULT_CREATED_AT DESC
+        """.trimIndent()
+
+        val cursor = db.rawQuery(query, null)
+        val dateFormat = SimpleDateFormat("dd/MM/yy", Locale.getDefault())
+
+        if (cursor.moveToFirst()) {
+            do {
+                val timestamp = cursor.getLong(cursor.getColumnIndexOrThrow(COLUMN_RESULT_CREATED_AT))
+                val timeTaken = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_TIME_TAKEN_SECONDS))
+
+                val easyPercent = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_EASY_PERCENT))
+                val hardPercent = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_HARD_PERCENT))
+
+                val difficulty = when {
+                    hardPercent > 50 -> "Rất Khó"
+                    hardPercent > 20 -> "Khó"
+                    easyPercent > 50 -> "Dễ"
+                    else -> "Trung bình"
+                }
+
+                val historyEntity = HistoryEntity(
+                    id = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_RESULT_ID)),
+                    monHoc = cursor.getString(cursor.getColumnIndexOrThrow("subject_name")),
+                    tenDe = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_TEST_NAME)),
+                    diem = cursor.getDouble(cursor.getColumnIndexOrThrow(COLUMN_SCORE)).toString(),
+                    thoiGianLam = "${timeTaken / 60} phút",
+                    ngayLam = dateFormat.format(java.util.Date(timestamp)),
+                    mucDo = difficulty
+                )
+                historyList.add(historyEntity)
+            } while (cursor.moveToNext())
+        }
+        cursor.close()
+        return historyList
+    }
+    fun getAllQuestions(): List<Question> {
+        // Tương tự, viết hàm để lấy tất cả câu hỏi
+        return emptyList() // Tạm thời trả về rỗng để hết lỗi
+    }
+    // Hàm áp dụng LỌC (2 Spinner) và TÌM KIẾM (Tên đề)
+    fun filterAndSearch(loaiLoc: String, giaTri: String, queryTenDe: String): List<HistoryEntity> {
+        var filteredList = getAllHistoryEntities()
+
+        if (loaiLoc != "Tất cả" && giaTri != "Tất cả") {
+            filteredList = filteredList.filter {
+                when (loaiLoc) {
+                    "Môn học" -> it.monHoc == giaTri
+                    "Mức độ" -> it.mucDo == giaTri
+                    "Điểm" -> isScoreInRange(it.diem, giaTri)
+                    "Thời gian làm" -> isTimeInRange(it.thoiGianLam, giaTri)
+                    "Ngày làm" -> isMonthMatch(it.ngayLam, giaTri)
+                    else -> true
+                }
+            }
+        }
+
+        val lowerCaseQuery = queryTenDe.lowercase()
+        return filteredList.filter {
+            queryTenDe.isBlank() || it.tenDe.lowercase().contains(lowerCaseQuery)
+        }
+    }
+
+    // --- GET DISTINCT VALUES FOR SPINNERS ---
+
+    fun getDistinctMonHoc(): List<String> {
+        return getAllHistoryEntities().map { it.monHoc }.distinct()
+    }
+
+    fun getDistinctMucDo(): List<String> {
+        return getAllHistoryEntities().map { it.mucDo }.distinct()
+    }
+
+    fun getDistinctDiemRanges(): List<String> {
+        return listOf("<5", "5-6.5", "6.5-8", "8-10")
+    }
+
+    fun getDistinctThoiGianRanges(): List<String> {
+        return listOf("<30 phút", "30-60 phút", "60-90 phút", ">90 phút")
+    }
+
+    fun getDistinctMonths(): List<String> {
+        return (1..12).map { "Tháng ${String.format("%02d", it)}" }
+    }
+
+    // --- HÀM XÓA KẾT QUẢ RIÊNG BIỆT (Dùng bởi HistoryDAO) ---
+    fun deleteTestResult(resultId: Int): Int {
+        val db = writableDatabase
+        val result = db.delete(TABLE_TEST_RESULTS, "$COLUMN_RESULT_ID = ?", arrayOf(resultId.toString()))
+        return result
+    }
+
+
+    // --- CÁC HÀM CRUD KHÁC (Giữ nguyên từ bài gốc) ---
 
     fun addSubject(subject: Subject): Long {
         val db = writableDatabase
@@ -224,15 +419,11 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         val db = writableDatabase
         db.beginTransaction()
         try {
-            // First, delete all questions (and their answers) associated with the subject
             val questions = getQuestionsBySubject(subjectId)
             for (question in questions) {
                 deleteQuestion(question.id)
             }
-
-            // Then, delete the subject itself
             deleteSubject(subjectId)
-
             db.setTransactionSuccessful()
         } finally {
             db.endTransaction()
@@ -385,7 +576,6 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         return test
     }
 
-    // Add delete and update helpers for tests
     fun deleteTest(testId: Int): Int {
         val db = writableDatabase
         val result = db.delete(TABLE_TESTS, "$COLUMN_TEST_ID = ?", arrayOf(testId.toString()))
