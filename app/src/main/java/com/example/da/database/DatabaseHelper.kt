@@ -313,9 +313,25 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         cursor.close()
         return historyList
     }
+    @SuppressLint("Range")
     fun getAllQuestions(): List<Question> {
-        // Tương tự, viết hàm để lấy tất cả câu hỏi
-        return emptyList() // Tạm thời trả về rỗng để hết lỗi
+        val questions = mutableListOf<Question>()
+        val db = readableDatabase
+        val cursor = db.rawQuery("SELECT * FROM $TABLE_QUESTIONS", null)
+        if (cursor.moveToFirst()) {
+            do {
+                val question = Question(
+                    id = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_QUESTION_ID)),
+                    subjectId = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_SUBJECT_ID)),
+                    text = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_QUESTION_TEXT)),
+                    difficulty = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_DIFFICULTY)),
+                    isMultipleChoice = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_IS_MULTIPLE_CHOICE)) == 1
+                )
+                questions.add(question)
+            } while (cursor.moveToNext())
+        }
+        cursor.close()
+        return questions
     }
     // Hàm áp dụng LỌC (2 Spinner) và TÌM KIẾM (Tên đề)
     fun filterAndSearch(loaiLoc: String, giaTri: String, queryTenDe: String): List<HistoryEntity> {
@@ -492,6 +508,78 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         }
         cursor.close()
         return questions
+    }
+
+    @SuppressLint("Range")
+    fun getQuestionById(questionId: Int): Question? {
+        val db = readableDatabase
+        val cursor = db.rawQuery("SELECT * FROM $TABLE_QUESTIONS WHERE $COLUMN_QUESTION_ID = ?", arrayOf(questionId.toString()))
+        var question: Question? = null
+        if (cursor.moveToFirst()) {
+            question = Question(
+                id = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_QUESTION_ID)),
+                subjectId = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_SUBJECT_ID)),
+                text = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_QUESTION_TEXT)),
+                difficulty = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_DIFFICULTY)),
+                isMultipleChoice = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_IS_MULTIPLE_CHOICE)) == 1
+            )
+        }
+        cursor.close()
+        return question
+    }
+
+    @SuppressLint("Range")
+    fun getAnswersByQuestionId(questionId: Int): List<Answer> {
+        val answers = mutableListOf<Answer>()
+        val db = readableDatabase
+        val cursor = db.rawQuery("SELECT * FROM $TABLE_ANSWERS WHERE $COLUMN_ANSWER_QUESTION_ID = ?", arrayOf(questionId.toString()))
+        if (cursor.moveToFirst()) {
+            do {
+                val answer = Answer(
+                    id = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ANSWER_ID)),
+                    questionId = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ANSWER_QUESTION_ID)),
+                    answerText = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_ANSWER_TEXT)),
+                    isCorrect = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_IS_CORRECT)) == 1
+                )
+                answers.add(answer)
+            } while (cursor.moveToNext())
+        }
+        cursor.close()
+        return answers
+    }
+
+    fun updateQuestion(questionId: Int, subjectId: Int, questionText: String, difficulty: String, isMultipleChoice: Boolean, answers: List<Pair<String, Boolean>>): Int {
+        val db = writableDatabase
+        db.beginTransaction()
+        try {
+            // Update question details
+            val questionValues = ContentValues().apply {
+                put(COLUMN_SUBJECT_ID, subjectId)
+                put(COLUMN_QUESTION_TEXT, questionText)
+                put(COLUMN_DIFFICULTY, difficulty)
+                put(COLUMN_IS_MULTIPLE_CHOICE, if (isMultipleChoice) 1 else 0)
+            }
+            val rowsAffected = db.update(TABLE_QUESTIONS, questionValues, "$COLUMN_QUESTION_ID = ?", arrayOf(questionId.toString()))
+
+            if (rowsAffected > 0) {
+                // Delete old answers
+                db.delete(TABLE_ANSWERS, "$COLUMN_ANSWER_QUESTION_ID = ?", arrayOf(questionId.toString()))
+
+                // Insert new answers
+                for ((answerText, isCorrect) in answers) {
+                    val answerValues = ContentValues().apply {
+                        put(COLUMN_ANSWER_QUESTION_ID, questionId)
+                        put(COLUMN_ANSWER_TEXT, answerText)
+                        put(COLUMN_IS_CORRECT, if (isCorrect) 1 else 0)
+                    }
+                    db.insert(TABLE_ANSWERS, null, answerValues)
+                }
+            }
+            db.setTransactionSuccessful()
+            return rowsAffected
+        } finally {
+            db.endTransaction()
+        }
     }
 
     fun addTest(test: Test): Long {

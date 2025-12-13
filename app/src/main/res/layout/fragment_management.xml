@@ -8,69 +8,49 @@
     android:background="#FAFAFA"
     tools:context=".fragment.ManagementFragment">
 
-    <!-- PHẦN ĐIỀU HƯỚNG CHUNG -->
+    <!-- Header -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:layout_marginBottom="16dp"
         android:padding="16dp">
 
-        <!-- NÚT ĐỂ ĐIỀU HƯỚNG SANG MÀN HÌNH LỊCH SỬ LÀM BÀI -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_goto_history"
-            android:layout_width="match_parent"
+        <TextView
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Xem Lịch Sử Làm Bài"
-            android:textSize="16sp"
-            app:iconGravity="textStart"
-            app:cornerRadius="8dp" />
+            android:layout_weight="1"
+            android:text="Quản lý"
+            android:textColor="#000000"
+            android:textSize="28sp"
+            android:textStyle="bold" />
 
-        <!-- CÁC NÚT TẠO MỚI -->
-        <LinearLayout
-            android:layout_width="match_parent"
+        <ImageView
+            android:id="@+id/btnMenu"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:orientation="horizontal">
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnCreateQuestion"
-                style="@style/Widget.Material3.Button.OutlinedButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Tạo câu hỏi" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnManageSubjects"
-                style="@style/Widget.Material3.Button.OutlinedButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_weight="1"
-                android:text="QL Môn học" />
-        </LinearLayout>
+            android:src="@drawable/ic_more_vert_24"
+            android:padding="8dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            app:tint="@color/black" />
     </LinearLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="?android:attr/listDivider"/>
 
     <!-- PHẦN QUẢN LÝ DANH SÁCH CÂU HỎI -->
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Danh sách câu hỏi"
-        android:textStyle="bold"
-        android:textSize="18sp"
-        android:layout_marginTop="16dp"
         android:layout_marginStart="16dp"
-        android:textColor="@color/black"/>
+        android:text="Danh sách câu hỏi"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:textStyle="bold" />
 
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:scrollbars="none">
 
         <LinearLayout
@@ -88,7 +68,7 @@
         android:id="@+id/rvQuestions"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="8dp"
+        android:paddingHorizontal="16dp"
         android:layout_weight="1" />
 
 </LinearLayout>

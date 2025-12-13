@@ -19,7 +19,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.da.R
-import com.example.da.activity.MainActivity
 import com.example.da.adapter.TestAdapter
 import com.example.da.database.DatabaseHelper
 import com.example.da.model.Subject
@@ -28,9 +27,8 @@ import com.example.da.model.Test
 class CreateTestFragment : Fragment() {
 
     private lateinit var ivBack: ImageView
-    private lateinit var btnAdd: Button
-    private lateinit var btnEdit: Button
-    private lateinit var btnDelete: Button
+    private lateinit var btnSave: Button
+    private lateinit var btnMenu: ImageView
     private lateinit var tvMode: TextView
     private lateinit var etTestName: EditText
     private lateinit var spinnerSubject: Spinner
@@ -69,9 +67,8 @@ class CreateTestFragment : Fragment() {
 
         // Init views
         ivBack = view.findViewById(R.id.ivBack)
-        btnAdd = view.findViewById(R.id.btnAdd)
-        btnEdit = view.findViewById(R.id.btnEdit)
-        btnDelete = view.findViewById(R.id.btnDelete)
+        btnSave = view.findViewById(R.id.btnSave)
+        btnMenu = view.findViewById(R.id.btnMenu)
         tvMode = view.findViewById(R.id.tvMode)
         etTestName = view.findViewById(R.id.et_test_name)
         spinnerSubject = view.findViewById(R.id.spinner_subject)
@@ -91,33 +88,55 @@ class CreateTestFragment : Fragment() {
 
         ivBack.setOnClickListener { parentFragmentManager.popBackStack() }
 
-        btnAdd.setOnClickListener {
+        btnMenu.setOnClickListener { showPopupMenu(it) }
+
+        btnSave.setOnClickListener {
             if (currentEditingTest != null) {
                 updateTest()
             } else {
                 createTest()
             }
         }
+    }
 
-        btnEdit.setOnClickListener {
-            if (tests.isEmpty()) {
-                Toast.makeText(requireContext(), "Không có đề để sửa", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
+    private fun showPopupMenu(view: View) {
+        val popup = android.widget.PopupMenu(requireContext(), view)
+        popup.menuInflater.inflate(R.menu.create_test_options, popup.menu)
+        popup.setOnMenuItemClickListener { item ->
+            when (item.itemId) {
+                R.id.action_create_mode -> {
+                    currentEditingTest = null
+                    clearForm()
+                    selectionMode = SelectionMode.NONE
+                    tvMode.text = getString(R.string.mode_create)
+                    btnSave.text = "Lưu đề thi"
+                    Toast.makeText(requireContext(), "Đã chuyển sang chế độ tạo mới", Toast.LENGTH_SHORT).show()
+                    true
+                }
+                R.id.action_edit_mode -> {
+                    if (tests.isEmpty()) {
+                        Toast.makeText(requireContext(), "Không có đề để sửa", Toast.LENGTH_SHORT).show()
+                    } else {
+                        selectionMode = SelectionMode.EDIT
+                        tvMode.text = getString(R.string.choose_test_to_edit)
+                        Toast.makeText(requireContext(), "Chạm vào đề trong danh sách để sửa", Toast.LENGTH_SHORT).show()
+                    }
+                    true
+                }
+                R.id.action_delete_mode -> {
+                    if (tests.isEmpty()) {
+                        Toast.makeText(requireContext(), "Không có đề để xóa", Toast.LENGTH_SHORT).show()
+                    } else {
+                        selectionMode = SelectionMode.DELETE
+                        tvMode.text = getString(R.string.choose_test_to_delete)
+                        Toast.makeText(requireContext(), "Chạm vào đề trong danh sách để xóa", Toast.LENGTH_SHORT).show()
+                    }
+                    true
+                }
+                else -> false
             }
-            selectionMode = SelectionMode.EDIT
-            tvMode.text = getString(R.string.choose_test_to_edit)
-            Toast.makeText(requireContext(), "Chạm vào đề trong danh sách để sửa", Toast.LENGTH_SHORT).show()
         }
-
-        btnDelete.setOnClickListener {
-            if (tests.isEmpty()) {
-                Toast.makeText(requireContext(), "Không có đề để xóa", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
-            }
-            selectionMode = SelectionMode.DELETE
-            tvMode.text = getString(R.string.choose_test_to_delete)
-            Toast.makeText(requireContext(), "Chạm vào đề trong danh sách để xóa", Toast.LENGTH_SHORT).show()
-        }
+        popup.show()
     }
 
     private fun setupSubjectSpinner() {
@@ -173,7 +192,7 @@ class CreateTestFragment : Fragment() {
         etMinutes.setText(test.durationMinutes.toString())
         if (test.allowMultipleAnswers) rbYes.isChecked = true else rbNo.isChecked = true
 
-        btnAdd.text = getString(R.string.cap_nhat)
+        btnSave.text = getString(R.string.cap_nhat)
     }
 
     private fun confirmDelete(test: Test) {
@@ -282,7 +301,7 @@ class CreateTestFragment : Fragment() {
         if (rows > 0) {
             Toast.makeText(requireContext(), "Cập nhật thành công", Toast.LENGTH_SHORT).show()
             currentEditingTest = null
-            btnAdd.text = getString(R.string.them)
+            btnSave.text = "Lưu đề thi"
             tvMode.text = getString(R.string.mode_create)
             etTestName.setText("")
             loadTests()

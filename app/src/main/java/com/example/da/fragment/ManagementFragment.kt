@@ -10,7 +10,6 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.commit
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.da.R
@@ -18,8 +17,6 @@ import com.example.da.adapter.QuestionAdapter
 import com.example.da.database.DatabaseHelper
 import com.example.da.model.Question
 import com.example.da.model.Subject
-import com.google.android.material.button.MaterialButton
-import kotlin.text.replace
 
 class ManagementFragment : Fragment() {
     private lateinit var adapter: QuestionAdapter
@@ -72,26 +69,47 @@ class ManagementFragment : Fragment() {
 
     private fun setupRecyclerView(view: View) {
         val rv = view.findViewById<RecyclerView>(R.id.rvQuestions)
-        adapter = QuestionAdapter(mutableListOf()) { question ->
-            // Xử lý sự kiện xóa câu hỏi
-            showDeleteConfirmationDialog(question)
-        }
+        adapter = QuestionAdapter(
+            mutableListOf(),
+            onDelete = { question ->
+                // Xử lý sự kiện xóa câu hỏi
+                showDeleteConfirmationDialog(question)
+            },
+            onItemClick = { question ->
+                // Chuyển sang màn hình sửa câu hỏi
+                navigateTo(TaoCauHoiFragment.newInstance(question.id))
+            }
+        )
         rv.layoutManager = LinearLayoutManager(requireContext())
         rv.adapter = adapter
     }
 
     private fun setupNavigationButtons(view: View) {
-        // Nút "Xem Lịch Sử"
-        val btnGoToHistory = view.findViewById<MaterialButton>(R.id.btn_goto_history)
-        btnGoToHistory.setOnClickListener { navigateTo(HistoryFragment()) }
+        val btnMenu = view.findViewById<android.widget.ImageView>(R.id.btnMenu)
+        btnMenu.setOnClickListener { showPopupMenu(it) }
+    }
 
-        // Nút "Tạo Câu Hỏi"
-        val btnCreateQuestion = view.findViewById<MaterialButton>(R.id.btnCreateQuestion)
-        btnCreateQuestion.setOnClickListener { navigateTo(TaoCauHoiFragment()) }
-
-        // Nút "Quản lý Môn học"
-        val btnManageSubjects = view.findViewById<MaterialButton>(R.id.btnManageSubjects)
-        btnManageSubjects.setOnClickListener { navigateTo(SubjectManagementFragment()) }
+    private fun showPopupMenu(view: View) {
+        val popup = android.widget.PopupMenu(requireContext(), view)
+        popup.menuInflater.inflate(R.menu.management_menu, popup.menu)
+        popup.setOnMenuItemClickListener { item ->
+            when (item.itemId) {
+                R.id.action_history -> {
+                    navigateTo(HistoryFragment())
+                    true
+                }
+                R.id.action_create_question -> {
+                    navigateTo(TaoCauHoiFragment())
+                    true
+                }
+                R.id.action_manage_subjects -> {
+                    navigateTo(SubjectManagementFragment())
+                    true
+                }
+                else -> false
+            }
+        }
+        popup.show()
     }
 
     private fun loadSubjectsAndCreateTabs() {
@@ -196,11 +214,10 @@ class ManagementFragment : Fragment() {
     }
 
     private fun navigateTo(fragment: Fragment) {
-        parentFragmentManager.commit {
-            setReorderingAllowed(true)
-            // Thay thế bằng ID container chuẩn trong MainActivity
-            replace(R.id.fragment_container, fragment)
-            addToBackStack(null)
-        }
+        parentFragmentManager.beginTransaction()
+            .setReorderingAllowed(true)
+            .replace(R.id.fragment_container, fragment)
+            .addToBackStack(null)
+            .commit()
     }
 }

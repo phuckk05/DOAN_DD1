@@ -6,7 +6,5 @@
     <item android:id="@+id/navigation_management"
         android:icon="@drawable/ic_management_24"
         android:title="Quản lý" />
-    <item android:id="@+id/navigation_profile"
-        android:icon="@drawable/ic_profile_24"
-        android:title="Hồ sơ" />
+
 </menu>

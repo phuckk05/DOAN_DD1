@@ -40,6 +40,21 @@ class TaoCauHoiFragment : Fragment() {
 
     // Track if multiple choice is allowed
     private var isMultipleChoice = false
+    private var currentEditingQuestionId: Int? = null
+
+    companion object {
+        private const val ARG_QUESTION_ID = "question_id"
+
+        fun newInstance(questionId: Int? = null): TaoCauHoiFragment {
+            val fragment = TaoCauHoiFragment()
+            val args = Bundle()
+            if (questionId != null) {
+                args.putInt(ARG_QUESTION_ID, questionId)
+            }
+            fragment.arguments = args
+            return fragment
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -54,9 +69,6 @@ class TaoCauHoiFragment : Fragment() {
         // Initialize database
         dbHelper = DatabaseHelper(requireContext())
 
-        // Add sample subjects if database is empty (first run)
-//        dbHelper.addSampleSubjects()
-
         // Initialize views
         etQuestion = view.findViewById(R.id.etQuestion)
         spinnerSubject = view.findViewById(R.id.spinnerSubject)
@@ -66,6 +78,13 @@ class TaoCauHoiFragment : Fragment() {
         ivBack = view.findViewById(R.id.ivBack)
         answersContainer = view.findViewById(R.id.answersContainer)
         rgMultipleChoice = view.findViewById(R.id.rgMultipleChoice)
+
+        // Check for editing mode
+        arguments?.let {
+            if (it.containsKey(ARG_QUESTION_ID)) {
+                currentEditingQuestionId = it.getInt(ARG_QUESTION_ID)
+            }
+        }
 
         // Set default to "Không" (single choice) - rbNo should be checked by default in XML
         // Get initial state from RadioGroup
@@ -97,6 +116,12 @@ class TaoCauHoiFragment : Fragment() {
         // Setup spinners
         setupSubjectSpinner()
         setupDifficultySpinner()
+
+        // Load data if editing
+        if (currentEditingQuestionId != null) {
+            loadQuestionData(currentEditingQuestionId!!)
+            tvAdd.text = "Lưu"
+        }
 
         // Setup click listeners
         ivBack.setOnClickListener {
@@ -161,7 +186,7 @@ class TaoCauHoiFragment : Fragment() {
         if (!isMultipleChoice && answerViews.size >= 4) {
             Toast.makeText(
                 requireContext(),
-                "Chế độ chọn 1 chỉ cho phép tối đa 4 đáp án!",
+                "Chế độ chọn 1 yêu cầu 4 đáp án!",
                 Toast.LENGTH_SHORT
             ).show()
             return
@@ -247,6 +272,11 @@ class TaoCauHoiFragment : Fragment() {
 
         // Set delete button click listener
         deleteButton.setOnClickListener {
+            if (!isMultipleChoice) {
+                Toast.makeText(requireContext(), "Chế độ chọn 1 yêu cầu 4 đáp án, không thể xóa!", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
             if (answerViews.size > 1) {
                 removeAnswerField(answerLayout, selectionButton, editText)
             } else {
@@ -350,7 +380,7 @@ class TaoCauHoiFragment : Fragment() {
         // Insert at position 0 (before tvAddAnswer)
         for ((oldButton, editText, _) in currentAnswers) {
             try {
-                recreateAnswerWithNewButton(editText.text.toString(), oldButton.isChecked, true, 0)
+                addAnswerField(editText.text.toString(), oldButton.isChecked)
             } catch (e: Exception) {
                 Toast.makeText(requireContext(), "Lỗi khi tạo đáp án: ${e.message}", Toast.LENGTH_SHORT).show()
             }
@@ -404,12 +434,13 @@ class TaoCauHoiFragment : Fragment() {
             return
         }
 
-        // Recreate answers with RadioButtons (max 4)
+        // Recreate answers with RadioButtons (exactly 4)
         // After removing all answers, only tvAddAnswer parent remains at index 0
         // So we insert all new answers at position 0 (before tvAddAnswer)
         var hasChecked = false
         val answersToKeep = currentAnswers.take(4)
 
+        // Add existing answers (up to 4)
         for (triple in answersToKeep) {
             try {
                 val (oldButton, editText, _) = triple
@@ -420,23 +451,22 @@ class TaoCauHoiFragment : Fragment() {
                     false
                 }
                 // Insert at position 0 (will push previous answers down)
-                recreateAnswerWithNewButton(editText.text.toString(), isChecked, false, 0)
+                addAnswerField(editText.text.toString(), isChecked)
             } catch (e: Exception) {
                 Toast.makeText(requireContext(), "Lỗi khi tạo đáp án: ${e.message}", Toast.LENGTH_SHORT).show()
             }
         }
 
-        // If no answers were kept (all deleted), show message
-        if (answersToKeep.isEmpty()) {
-            Toast.makeText(
-                requireContext(),
-                "Chưa có đáp án nào. Vui lòng thêm đáp án!",
-                Toast.LENGTH_SHORT
-            ).show()
+        // Fill up to 4 answers if needed
+        val needed = 4 - answersToKeep.size
+        for (i in 0 until needed) {
+            addAnswerField("", false)
         }
     }
 
-    private fun recreateAnswerWithNewButton(text: String, isChecked: Boolean, useCheckBox: Boolean, insertIndex: Int) {
+    private fun addAnswerField(initialText: String = "", initialIsCorrect: Boolean = false) {
+        val insertIndex = answersContainer.childCount - 1 // Insert before "Add Answer" button
+
         val answerLayout = LinearLayout(requireContext()).apply {
             layoutParams = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -448,13 +478,13 @@ class TaoCauHoiFragment : Fragment() {
             gravity = android.view.Gravity.CENTER_VERTICAL
         }
 
-        val selectionButton: CompoundButton = if (useCheckBox) {
+        val selectionButton: CompoundButton = if (isMultipleChoice) {
             CheckBox(requireContext()).apply {
                 layoutParams = LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.WRAP_CONTENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT
                 )
-                this.isChecked = isChecked
+                isChecked = initialIsCorrect
             }
         } else {
             RadioButton(requireContext()).apply {
@@ -462,9 +492,10 @@ class TaoCauHoiFragment : Fragment() {
                     LinearLayout.LayoutParams.WRAP_CONTENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT
                 )
-                this.isChecked = isChecked
+                isChecked = initialIsCorrect
                 setOnCheckedChangeListener { _, checked ->
                     if (checked) {
+                        // Uncheck other radio buttons
                         answerViews.forEach { (button, _, _) ->
                             if (button != this && button is RadioButton) {
                                 button.isChecked = false
@@ -483,7 +514,7 @@ class TaoCauHoiFragment : Fragment() {
             ).apply {
                 marginStart = dpToPx(8)
             }
-            setText(text)
+            setText(initialText)
             hint = "Nhập đáp án ${answerViews.size + 1}"
             textSize = 14f
             setBackgroundResource(android.R.color.transparent)
@@ -512,6 +543,11 @@ class TaoCauHoiFragment : Fragment() {
         answerViews.add(Triple(selectionButton, editText, answerLayout))
 
         deleteButton.setOnClickListener {
+            if (!isMultipleChoice) {
+                Toast.makeText(requireContext(), "Chế độ chọn 1 yêu cầu 4 đáp án, không thể xóa!", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
             if (answerViews.size > 1) {
                 removeAnswerField(answerLayout, selectionButton, editText)
             } else {
@@ -576,6 +612,14 @@ class TaoCauHoiFragment : Fragment() {
 
         // Additional validation for single choice mode
         if (!isMultipleChoice) {
+            if (answers.size != 4) {
+                Toast.makeText(
+                    requireContext(),
+                    "Chế độ chọn 1 yêu cầu đủ 4 đáp án!",
+                    Toast.LENGTH_SHORT
+                ).show()
+                return
+            }
             val correctCount = answers.count { it.second }
             if (correctCount > 1) {
                 Toast.makeText(
@@ -589,34 +633,117 @@ class TaoCauHoiFragment : Fragment() {
 
         val selectedSubject = subjectsList[spinnerSubject.selectedItemPosition]
 
-        // Save to database
-        val questionId = dbHelper.addQuestion(
-            subjectId = selectedSubject.id,
-            questionText = question,
-            difficulty = difficulty,
-            isMultipleChoice = isMultipleChoice,
-            answers = answers
-        )
+        if (currentEditingQuestionId != null) {
+            // Update existing question
+            val rowsAffected = dbHelper.updateQuestion(
+                questionId = currentEditingQuestionId!!,
+                subjectId = selectedSubject.id,
+                questionText = question,
+                difficulty = difficulty,
+                isMultipleChoice = isMultipleChoice,
+                answers = answers
+            )
 
-        if (questionId > 0) {
-            Toast.makeText(
-                requireContext(),
-                "Lưu câu hỏi cho môn '${selectedSubject.name}' thành công!",
-                Toast.LENGTH_SHORT
-            ).show()
-
-            // Clear inputs
-            etQuestion.text.clear()
-            for ((checkbox, editText, _) in answerViews) {
-                editText.text.clear()
-                checkbox.isChecked = false
+            if (rowsAffected > 0) {
+                Toast.makeText(requireContext(), "Cập nhật câu hỏi thành công!", Toast.LENGTH_SHORT).show()
+                parentFragmentManager.popBackStack()
+            } else {
+                Toast.makeText(requireContext(), "Lỗi khi cập nhật câu hỏi!", Toast.LENGTH_SHORT).show()
             }
         } else {
-            Toast.makeText(
-                requireContext(),
-                "Lỗi khi lưu câu hỏi!",
-                Toast.LENGTH_SHORT
-            ).show()
+            // Save new question
+            val questionId = dbHelper.addQuestion(
+                subjectId = selectedSubject.id,
+                questionText = question,
+                difficulty = difficulty,
+                isMultipleChoice = isMultipleChoice,
+                answers = answers
+            )
+
+            if (questionId > 0) {
+                Toast.makeText(
+                    requireContext(),
+                    "Lưu câu hỏi cho môn '${selectedSubject.name}' thành công!",
+                    Toast.LENGTH_SHORT
+                ).show()
+
+                // Clear inputs
+                etQuestion.text.clear()
+                for ((checkbox, editText, _) in answerViews) {
+                    editText.text.clear()
+                    checkbox.isChecked = false
+                }
+            } else {
+                Toast.makeText(
+                    requireContext(),
+                    "Lỗi khi lưu câu hỏi!",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+    }
+
+    private fun loadQuestionData(questionId: Int) {
+        val question = dbHelper.getQuestionById(questionId) ?: return
+        val answers = dbHelper.getAnswersByQuestionId(questionId)
+
+        etQuestion.setText(question.text)
+
+        // Set subject
+        val subjectIndex = subjectsList.indexOfFirst { it.id == question.subjectId }
+        if (subjectIndex >= 0) {
+            spinnerSubject.setSelection(subjectIndex)
+        }
+
+        // Set difficulty
+        val difficultyAdapter = spinnerDifficulty.adapter as ArrayAdapter<String>
+        val difficultyPosition = difficultyAdapter.getPosition(question.difficulty)
+        if (difficultyPosition >= 0) {
+            spinnerDifficulty.setSelection(difficultyPosition)
+        }
+
+        // Set multiple choice mode
+        isMultipleChoice = question.isMultipleChoice
+        if (isMultipleChoice) {
+            rgMultipleChoice.check(R.id.rbYes)
+        } else {
+            rgMultipleChoice.check(R.id.rbNo)
+        }
+
+        // Clear default answers safely (keep Add Answer button)
+        val tvAddAnswer = answersContainer.findViewById<TextView>(R.id.tvAddAnswer)
+        if (tvAddAnswer != null) {
+            val addAnswerParent = tvAddAnswer.parent as? View
+            if (addAnswerParent != null) {
+                // Remove all children except the one containing tvAddAnswer
+                for (i in answersContainer.childCount - 1 downTo 0) {
+                    val child = answersContainer.getChildAt(i)
+                    if (child != addAnswerParent) {
+                        answersContainer.removeViewAt(i)
+                    }
+                }
+            }
+        }
+        answerViews.clear()
+
+        // Add answers
+        if (!isMultipleChoice) {
+            // Single choice: Ensure exactly 4 answers
+            val answersToShow = answers.take(4)
+            for (answer in answersToShow) {
+                addAnswerField(answer.answerText, answer.isCorrect)
+            }
+            // Fill remaining slots
+            val needed = 4 - answersToShow.size
+            for (i in 0 until needed) {
+                addAnswerField("", false)
+            }
+        } else {
+            // Multiple choice: Add all answers
+            for (answer in answers) {
+                addAnswerField(answer.answerText, answer.isCorrect)
+            }
         }
     }
 }
+

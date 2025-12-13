@@ -7,7 +7,6 @@ import androidx.fragment.app.Fragment
 import com.example.da.R
 import com.example.da.fragment.HomeFragment
 import com.example.da.fragment.ManagementFragment
-import com.example.da.fragment.ProfileFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
@@ -20,7 +19,6 @@ class MainActivity : AppCompatActivity() {
             val selectedFragment: Fragment? = when (item.itemId) {
                 R.id.navigation_home -> HomeFragment()
                 R.id.navigation_management -> ManagementFragment()
-                R.id.navigation_profile -> ProfileFragment()
                 else -> null
             }
             selectedFragment?.let {

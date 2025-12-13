@@ -11,7 +11,8 @@ import com.example.da.model.Question
 
 class QuestionAdapter(
     private val questions: List<Question>,
-    private val onDelete: (Question) -> Unit
+    private val onDelete: (Question) -> Unit,
+    private val onItemClick: (Question) -> Unit
 ) : RecyclerView.Adapter<QuestionAdapter.QuestionViewHolder>() {
 
     private var displayList: List<Question> = questions
@@ -32,6 +33,10 @@ class QuestionAdapter(
         val question = displayList[position]
         holder.tvQuestion.text = question.text
         holder.tvDifficulty.text = "Mức độ: ${question.difficulty}"
+
+        holder.itemView.setOnClickListener {
+            onItemClick(question)
+        }
 
         holder.ivDelete.setOnClickListener {
             onDelete(question)

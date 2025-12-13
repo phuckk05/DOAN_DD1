@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFFFF"
@@ -41,37 +42,15 @@
                 android:paddingStart="8dp"
                 android:paddingEnd="8dp" />
 
-            <!-- Actions as buttons for clarity -->
-            <Button
-                android:id="@+id/btnAdd"
-                style="@style/Widget.AppCompat.Button.Borderless"
+            <!-- Menu Button -->
+            <ImageView
+                android:id="@+id/btnMenu"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/them"
-                android:textColor="#0066CC"
-                android:padding="8dp" />
-
-            <Button
-                android:id="@+id/btnEdit"
-                style="@style/Widget.AppCompat.Button.Borderless"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:text="@string/sua"
-                android:textColor="#FF9800"
+                android:src="@drawable/ic_more_vert_24"
                 android:padding="8dp"
-                android:contentDescription="@string/sua_de" />
-
-            <Button
-                android:id="@+id/btnDelete"
-                style="@style/Widget.AppCompat.Button.Borderless"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:text="@string/xoa"
-                android:textColor="#D32F2F"
-                android:padding="8dp"
-                android:contentDescription="@string/xoa_de" />
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:tint="@color/black" />
 
         </LinearLayout>
 
@@ -210,6 +189,15 @@
             android:padding="8dp"
             android:inputType="number"
             android:importantForAutofill="no" />
+
+        <Button
+            android:id="@+id/btnSave"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Lưu đề thi"
+            android:backgroundTint="#3D4AFA"
+            android:textColor="@android:color/white" />
 
         <!-- Recycler of existing tests -->
         <TextView
