@@ -69,15 +69,8 @@ class TaoCauHoiFragment : Fragment() {
         // Initialize database
         dbHelper = DatabaseHelper(requireContext())
 
-        // Initialize views
-        etQuestion = view.findViewById(R.id.etQuestion)
-        spinnerSubject = view.findViewById(R.id.spinnerSubject)
-        spinnerDifficulty = view.findViewById(R.id.spinnerDifficulty)
-        tvAddAnswer = view.findViewById(R.id.tvAddAnswer)
-        tvAdd = view.findViewById(R.id.tvAdd)
-        ivBack = view.findViewById(R.id.ivBack)
-        answersContainer = view.findViewById(R.id.answersContainer)
-        rgMultipleChoice = view.findViewById(R.id.rgMultipleChoice)
+        setControl(view)
+        setEvent()
 
         // Check for editing mode
         arguments?.let {
@@ -95,6 +88,31 @@ class TaoCauHoiFragment : Fragment() {
             else -> false // default to single choice if nothing checked
         }
 
+        // Setup spinners
+        setupSubjectSpinner()
+        setupDifficultySpinner()
+
+        // Load data if editing
+        if (currentEditingQuestionId != null) {
+            loadQuestionData(currentEditingQuestionId!!)
+            tvAdd.text = "Lưu"
+        }
+    }
+
+    // Initialize views
+    private fun setControl(view: View) {
+        etQuestion = view.findViewById(R.id.etQuestion)
+        spinnerSubject = view.findViewById(R.id.spinnerSubject)
+        spinnerDifficulty = view.findViewById(R.id.spinnerDifficulty)
+        tvAddAnswer = view.findViewById(R.id.tvAddAnswer)
+        tvAdd = view.findViewById(R.id.tvAdd)
+        ivBack = view.findViewById(R.id.ivBack)
+        answersContainer = view.findViewById(R.id.answersContainer)
+        rgMultipleChoice = view.findViewById(R.id.rgMultipleChoice)
+    }
+
+    // Setup event listeners
+    private fun setEvent() {
         // Setup multiple choice listener
         rgMultipleChoice.setOnCheckedChangeListener { _, newCheckedId ->
             when (newCheckedId) {
@@ -111,16 +129,6 @@ class TaoCauHoiFragment : Fragment() {
                     }
                 }
             }
-        }
-
-        // Setup spinners
-        setupSubjectSpinner()
-        setupDifficultySpinner()
-
-        // Load data if editing
-        if (currentEditingQuestionId != null) {
-            loadQuestionData(currentEditingQuestionId!!)
-            tvAdd.text = "Lưu"
         }
 
         // Setup click listeners
@@ -746,4 +754,3 @@ class TaoCauHoiFragment : Fragment() {
         }
     }
 }
-

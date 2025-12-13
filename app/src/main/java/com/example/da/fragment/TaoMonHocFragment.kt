@@ -33,11 +33,19 @@ class TaoMonHocFragment : Fragment() {
         // Initialize database
         dbHelper = DatabaseHelper(requireContext())
 
-        // Initialize views
+        setControl(view)
+        setEvent()
+    }
+
+    // Initialize views
+    private fun setControl(view: View) {
         etSubjectName = view.findViewById(R.id.etSubjectName)
         tvAddSubject = view.findViewById(R.id.tvAddSubject)
         ivBack = view.findViewById(R.id.ivBackSubject)
+    }
 
+    // Setup event listeners
+    private fun setEvent() {
         // Setup click listeners
         tvAddSubject.setOnClickListener {
             addNewSubject()

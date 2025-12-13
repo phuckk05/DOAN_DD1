@@ -24,6 +24,10 @@ class SubjectManagementFragment : Fragment() {
     private lateinit var subjectAdapter: SubjectAdapter
     private val subjectsList = mutableListOf<Subject>()
 
+    private lateinit var btnBack: ImageButton
+    private lateinit var rvSubjects: RecyclerView
+    private lateinit var btnAddSubject: Button
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -36,9 +40,18 @@ class SubjectManagementFragment : Fragment() {
 
         dbHelper = DatabaseHelper(requireContext())
 
-        val btnBack = view.findViewById<ImageButton>(R.id.btnBack)
-        val rvSubjects = view.findViewById<RecyclerView>(R.id.rvSubjects)
-        val btnAddSubject = view.findViewById<Button>(R.id.btnAddSubject)
+        setControl(view)
+        setEvent()
+
+        // Initial data load
+        loadSubjects()
+    }
+
+    // Initialize views
+    private fun setControl(view: View) {
+        btnBack = view.findViewById(R.id.btnBack)
+        rvSubjects = view.findViewById(R.id.rvSubjects)
+        btnAddSubject = view.findViewById(R.id.btnAddSubject)
 
         subjectAdapter = SubjectAdapter(subjectsList,
             onEditClick = { subject -> showEditSubjectDialog(subject) },
@@ -47,9 +60,10 @@ class SubjectManagementFragment : Fragment() {
 
         rvSubjects.layoutManager = LinearLayoutManager(requireContext())
         rvSubjects.adapter = subjectAdapter
+    }
 
-        loadSubjects()
-
+    // Setup event listeners
+    private fun setEvent() {
         btnBack.setOnClickListener {
             parentFragmentManager.popBackStack()
         }

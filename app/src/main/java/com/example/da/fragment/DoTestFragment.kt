@@ -74,6 +74,7 @@ class DoTestFragment : Fragment() {
         setEvent()
     }
 
+    // Initialize views
     private fun setControl(view: View) {
         tvTimer = view.findViewById(R.id.tvTimer)
         tvQuestionNumber = view.findViewById(R.id.tvQuestionNumber)
@@ -83,6 +84,7 @@ class DoTestFragment : Fragment() {
         btnNext = view.findViewById(R.id.btnNext)
     }
 
+    // Setup event listeners
     private fun setEvent() {
         if (::currentTest.isInitialized) {
             startTimer(currentTest.durationMinutes.toLong())

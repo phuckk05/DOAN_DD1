@@ -66,6 +66,7 @@ class HistoryFragment : Fragment() {
 
     // --- Các hàm cài đặt và xử lý sự kiện ---
 
+    // Initialize views
     private fun setControl(view: View) {
         rcv = view.findViewById(R.id.recyclerView)
         spinnerLoaiLoc = view.findViewById(R.id.spinnerLoaiLoc)
@@ -86,6 +87,7 @@ class HistoryFragment : Fragment() {
         rcv.adapter = adapter
     }
 
+    // Setup event listeners
     private fun setEvent() {
         btnTroVe.setOnClickListener {
             parentFragmentManager.popBackStack()

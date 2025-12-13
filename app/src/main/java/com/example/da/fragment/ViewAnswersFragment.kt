@@ -45,12 +45,14 @@ class ViewAnswersFragment : Fragment() {
         setEvent()
     }
 
+    // Initialize views
     private fun setControl(view: View) {
         ivBack = view.findViewById(R.id.ivBack)
         tvTestTitle = view.findViewById(R.id.tvTestTitle)
         rvAnswers = view.findViewById(R.id.rvAnswers)
     }
 
+    // Setup event listeners
     private fun setEvent() {
         val test = dbHelper.getTestById(testId)
         tvTestTitle.text = test?.name ?: "Đáp án"

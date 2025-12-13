@@ -65,7 +65,17 @@ class CreateTestFragment : Fragment() {
 
         dbHelper = DatabaseHelper(requireContext())
 
-        // Init views
+        setControl(view)
+        setEvent()
+
+        // Initial setup
+        setupSubjectSpinner()
+        setupRecycler()
+        loadTests()
+    }
+
+    // Initialize views
+    private fun setControl(view: View) {
         ivBack = view.findViewById(R.id.ivBack)
         btnSave = view.findViewById(R.id.btnSave)
         btnMenu = view.findViewById(R.id.btnMenu)
@@ -81,11 +91,10 @@ class CreateTestFragment : Fragment() {
         rbNo = view.findViewById(R.id.rb_no)
         etMinutes = view.findViewById(R.id.et_minutes)
         rvTests = view.findViewById(R.id.rvTests)
+    }
 
-        setupSubjectSpinner()
-        setupRecycler()
-        loadTests()
-
+    // Setup event listeners
+    private fun setEvent() {
         ivBack.setOnClickListener { parentFragmentManager.popBackStack() }
 
         btnMenu.setOnClickListener { showPopupMenu(it) }

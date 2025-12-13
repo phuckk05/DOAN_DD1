@@ -27,6 +27,8 @@ class ManagementFragment : Fragment() {
     private var currentSubjectId: Int = -1 // -1 = Tất cả
 
     private lateinit var tabContainer: LinearLayout
+    private lateinit var rvQuestions: RecyclerView
+    private lateinit var btnMenu: android.widget.ImageView
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -38,17 +40,13 @@ class ManagementFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         try {
-            // --- KHỞI TẠO CÁC THÀNH PHẦN CƠ BẢN ---
+            // Initialize database helper
             dbHelper = DatabaseHelper(requireContext())
-            tabContainer = view.findViewById(R.id.tabContainer)
 
-            // --- CÀI ĐẶT RecyclerView ---
-            setupRecyclerView(view)
+            setControl(view)
+            setEvent()
 
-            // --- XỬ LÝ SỰ KIỆN CHO CÁC NÚT ĐIỀU HƯỚNG ---
-            setupNavigationButtons(view)
-
-            // --- TẢI DỮ LIỆU LẦN ĐẦU ---
+            // Initial data load
             loadSubjectsAndCreateTabs()
             loadQuestionsForCurrentTab()
 
@@ -56,6 +54,21 @@ class ManagementFragment : Fragment() {
             Log.e("ManagementFragment", "Lỗi nghiêm trọng trong onViewCreated: ${e.message}", e)
             Toast.makeText(requireContext(), "Lỗi khởi tạo màn hình: ${e.message}", Toast.LENGTH_LONG).show()
         }
+    }
+
+    // Initialize views
+    private fun setControl(view: View) {
+        tabContainer = view.findViewById(R.id.tabContainer)
+        rvQuestions = view.findViewById(R.id.rvQuestions)
+        btnMenu = view.findViewById(R.id.btnMenu)
+
+        // Setup RecyclerView
+        setupRecyclerView()
+    }
+
+    // Setup event listeners
+    private fun setEvent() {
+        btnMenu.setOnClickListener { showPopupMenu(it) }
     }
 
     override fun onResume() {
@@ -67,8 +80,7 @@ class ManagementFragment : Fragment() {
         }
     }
 
-    private fun setupRecyclerView(view: View) {
-        val rv = view.findViewById<RecyclerView>(R.id.rvQuestions)
+    private fun setupRecyclerView() {
         adapter = QuestionAdapter(
             mutableListOf(),
             onDelete = { question ->
@@ -80,13 +92,8 @@ class ManagementFragment : Fragment() {
                 navigateTo(TaoCauHoiFragment.newInstance(question.id))
             }
         )
-        rv.layoutManager = LinearLayoutManager(requireContext())
-        rv.adapter = adapter
-    }
-
-    private fun setupNavigationButtons(view: View) {
-        val btnMenu = view.findViewById<android.widget.ImageView>(R.id.btnMenu)
-        btnMenu.setOnClickListener { showPopupMenu(it) }
+        rvQuestions.layoutManager = LinearLayoutManager(requireContext())
+        rvQuestions.adapter = adapter
     }
 
     private fun showPopupMenu(view: View) {

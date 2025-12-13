@@ -48,6 +48,7 @@ class TestHistoryFragment : Fragment() {
         setEvent()
     }
 
+    // Initialize views
     private fun setControl(view: View) {
         ivBack = view.findViewById(R.id.ivBack)
         tvTestTitle = view.findViewById(R.id.tvTestTitle)
@@ -55,6 +56,7 @@ class TestHistoryFragment : Fragment() {
         btnStartTest = view.findViewById(R.id.btnStartTest)
     }
 
+    // Setup event listeners
     private fun setEvent() {
         val test = dbHelper.getTestById(testId)
         tvTestTitle.text = test?.name ?: "Lịch sử làm bài"

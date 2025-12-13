@@ -33,13 +33,24 @@ class HomeFragment : Fragment() {
 
         dbHelper = DatabaseHelper(requireContext())
 
+        setControl(view)
+        setEvent()
+
+        // Initial data load
+        loadTests()
+    }
+
+    // Initialize views
+    private fun setControl(view: View) {
         rvTestList = view.findViewById(R.id.rvTestList)
         tvCreate = view.findViewById(R.id.tvCreate)
 
         // Setup RecyclerView
         setupRecyclerView()
-        loadTests()
+    }
 
+    // Setup event listeners
+    private fun setEvent() {
         // Setup Create button click listener
         tvCreate.setOnClickListener {
             parentFragmentManager.beginTransaction()

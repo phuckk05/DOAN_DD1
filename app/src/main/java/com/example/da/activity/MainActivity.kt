@@ -10,11 +10,29 @@ import com.example.da.fragment.ManagementFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var bottomNavigation: BottomNavigationView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val bottomNavigation: BottomNavigationView = findViewById(R.id.bottom_navigation)
+        setControl()
+        setEvent()
+
+        // Set default fragment
+        if (savedInstanceState == null) {
+            bottomNavigation.selectedItemId = R.id.navigation_home
+        }
+    }
+
+    // Initialize views
+    private fun setControl() {
+        bottomNavigation = findViewById(R.id.bottom_navigation)
+    }
+
+    // Setup event listeners
+    private fun setEvent() {
         bottomNavigation.setOnItemSelectedListener { item ->
             val selectedFragment: Fragment? = when (item.itemId) {
                 R.id.navigation_home -> HomeFragment()
@@ -31,15 +49,14 @@ class MainActivity : AppCompatActivity() {
             }
             true
         }
-
-        // Set default fragment
-        if (savedInstanceState == null) {
-            bottomNavigation.selectedItemId = R.id.navigation_home
-        }
     }
 
     fun showBottomNavigation(show: Boolean) {
-        val bottomNavigation: BottomNavigationView = findViewById(R.id.bottom_navigation)
-        bottomNavigation.visibility = if (show) View.VISIBLE else View.GONE
+        // Ensure bottomNavigation is initialized if called from outside before onCreate (unlikely but safe)
+        if (::bottomNavigation.isInitialized) {
+            bottomNavigation.visibility = if (show) View.VISIBLE else View.GONE
+        } else {
+            findViewById<BottomNavigationView>(R.id.bottom_navigation)?.visibility = if (show) View.VISIBLE else View.GONE
+        }
     }
 }
