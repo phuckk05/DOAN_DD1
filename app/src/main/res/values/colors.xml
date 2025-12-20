@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Bảng màu chính - Lấy cảm hứng từ ảnh mẫu -->
+    <color name="primary">#5E35B1</color> <!-- Tím đậm chủ đạo -->
+    <color name="primary_variant">#4527A0</color> <!-- Tím rất đậm cho Status Bar -->
+    <color name="secondary">#7E57C2</color> <!-- Tím nhạt hơn cho các thành phần phụ -->
+    <color name="accent">#4FC3F7</color> <!-- Xanh lam sáng làm điểm nhấn -->
+
+    <!-- Màu nền -->
+    <color name="background_light">#F5F7FA</color> <!-- Nền chính (gần như trắng) -->
+    <color name="background_dark">#EDE7F6</color> <!-- Nền phụ màu tím rất nhạt -->
+
+    <!-- Màu chữ -->
+    <color name="text_primary">#212121</color> <!-- Đen đậm cho tiêu đề -->
+    <color name="text_secondary">#757575</color> <!-- Xám cho chữ phụ -->
+    <color name="text_on_primary">#FFFFFF</color> <!-- Trắng cho chữ trên nền tím -->
+
+    <!-- Màu chức năng -->
+    <color name="delete_red">#E53935</color>
+    <color name="edit_yellow">#FFB300</color>
+    <color name="confirm_green">#43A047</color>
+
+    <!-- Các màu cũ (giữ lại để tham khảo nếu cần) -->
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+</resources>
