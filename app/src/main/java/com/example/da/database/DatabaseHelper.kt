@@ -18,7 +18,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
 
     companion object {
         private const val DATABASE_NAME = "QuizApp.db"
-        private const val DATABASE_VERSION = 7 // Tăng phiên bản để kích hoạt onUpgrade
+        private const val DATABASE_VERSION = 8 // Tăng phiên bản để kích hoạt onUpgrade
 
         // Table Subjects
         private const val TABLE_SUBJECTS = "subjects"
@@ -61,6 +61,14 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         private const val COLUMN_SCORE = "score" // REAL cho điểm thập phân
         private const val COLUMN_TIME_TAKEN_SECONDS = "time_taken_seconds"
         private const val COLUMN_RESULT_CREATED_AT = "created_at"
+
+        // THÊM MỚI: Khai báo cho bảng Users
+        private const val TABLE_USERS = "users"
+        private const val COLUMN_USER_ID = "user_id"
+        private const val COLUMN_USERNAME = "username"
+        private const val COLUMN_PASSWORD = "password"
+        private const val COLUMN_ROLE = "role" // "admin" hoặc "user"
+
     }
 
     override fun onCreate(db: SQLiteDatabase?) {
@@ -120,12 +128,42 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
             )
         """.trimIndent()
 
+        val createUsersTable = """
+        CREATE TABLE $TABLE_USERS (
+            $COLUMN_USER_ID INTEGER PRIMARY KEY AUTOINCREMENT,
+            $COLUMN_USERNAME TEXT NOT NULL UNIQUE,
+            $COLUMN_PASSWORD TEXT NOT NULL,
+            $COLUMN_ROLE TEXT NOT NULL
+        )
+    """.trimIndent()
+
+
+
         db?.execSQL(createSubjectsTable)
         db?.execSQL(createQuestionsTable)
         db?.execSQL(createAnswersTable)
         db?.execSQL(createTestsTable)
         db?.execSQL(createTestResultsTable)
         addSampleData(db)
+        db?.execSQL(createUsersTable) // Thực thi lệnh tạo bảng
+    }
+
+    private fun addSampleUsers(db: SQLiteDatabase?) {
+        // Tạo tài khoản Admin
+        val adminValues = ContentValues().apply {
+            put(COLUMN_USERNAME, "admin")
+            put(COLUMN_PASSWORD, "123") // CẢNH BÁO: Mật khẩu không an toàn
+            put(COLUMN_ROLE, "admin")
+        }
+        db?.insert(TABLE_USERS, null, adminValues)
+
+        // Tạo tài khoản User
+        val userValues = ContentValues().apply {
+            put(COLUMN_USERNAME, "user")
+            put(COLUMN_PASSWORD, "123") // CẢNH BÁO: Mật khẩu không an toàn
+            put(COLUMN_ROLE, "user")
+        }
+        db?.insert(TABLE_USERS, null, userValues)
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
@@ -134,6 +172,11 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         db?.execSQL("DROP TABLE IF EXISTS $TABLE_TESTS")
         db?.execSQL("DROP TABLE IF EXISTS $TABLE_TEST_RESULTS")
         db?.execSQL("DROP TABLE IF EXISTS $TABLE_SUBJECTS")
+        // THÊM MỚI: Lệnh xóa bảng Users
+        db?.execSQL("DROP TABLE IF EXISTS $TABLE_USERS")
+
+        // ... (các lệnh drop table cũ giữ nguyên)
+        db?.execSQL("DROP TABLE IF EXISTS $TABLE_ANSWERS")
         onCreate(db)
     }
 
@@ -219,6 +262,59 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         }
     }
 
+
+    fun addUser(username: String, password: String, role: String = "user"): Long {
+        // LƯU Ý: Trong thực tế, bạn PHẢI mã hóa mật khẩu trước khi lưu.
+        // Ví dụ: val hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt())
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put(COLUMN_USERNAME, username)
+            put(COLUMN_PASSWORD, password) // Lưu mật khẩu đã được mã hóa
+            put(COLUMN_ROLE, role)
+        }
+        val id = db.insert(TABLE_USERS, null, values)
+        db.close()
+        return id
+    }
+
+    /**
+     * Kiểm tra thông tin đăng nhập của người dùng.
+     * @param username Tên đăng nhập.
+     * @param password Mật khẩu (chưa mã hóa).
+     * @return Một cặp (Pair) chứa vai trò (role) và ID (user_id) nếu đăng nhập thành công, ngược lại trả về null.
+     */
+    @SuppressLint("Range")
+    fun checkUser(username: String, password: String): Pair<String, Int>? {
+        val db = readableDatabase
+        // Khi kiểm tra, bạn cũng cần so sánh với mật khẩu đã được mã hóa trong DB.
+        val cursor = db.rawQuery(
+            "SELECT $COLUMN_ROLE, $COLUMN_USER_ID FROM $TABLE_USERS WHERE $COLUMN_USERNAME = ? AND $COLUMN_PASSWORD = ?",
+            arrayOf(username, password)
+        )
+        var result: Pair<String, Int>? = null
+        if (cursor.moveToFirst()) {
+            val role = cursor.getString(cursor.getColumnIndex(COLUMN_ROLE))
+            val userId = cursor.getInt(cursor.getColumnIndex(COLUMN_USER_ID))
+            result = Pair(role, userId)
+        }
+        cursor.close()
+        db.close()
+        return result
+    }
+
+    /**
+     * Kiểm tra xem một tên đăng nhập đã tồn tại trong cơ sở dữ liệu hay chưa.
+     * @param username Tên đăng nhập cần kiểm tra.
+     * @return true nếu đã tồn tại, false nếu chưa.
+     */
+    fun isUserExists(username: String): Boolean {
+        val db = readableDatabase
+        val cursor = db.rawQuery("SELECT 1 FROM $TABLE_USERS WHERE $COLUMN_USERNAME = ?", arrayOf(username))
+        val exists = cursor.count > 0
+        cursor.close()
+        db.close()
+        return exists
+    }
     // --- LOGIC LỌC KHÁC (Hàm phụ trợ) ---
 
     private fun isScoreInRange(diemString: String, range: String): Boolean {

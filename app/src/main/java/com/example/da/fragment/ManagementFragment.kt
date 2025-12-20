@@ -1,18 +1,23 @@
 package com.example.da.fragment
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.PopupMenu
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.da.R
+import com.example.da.SessionManager // <-- THÊM IMPORT
+import com.example.da.activity.AuthActivity // <-- THÊM IMPORT
 import com.example.da.adapter.QuestionAdapter
 import com.example.da.database.DatabaseHelper
 import com.example.da.model.Question
@@ -24,29 +29,47 @@ class ManagementFragment : Fragment() {
     private val allQuestions = mutableListOf<Question>()
     private val subjectsList = mutableListOf<Subject>()
     private val tabViews = mutableListOf<TextView>()
-    private var currentSubjectId: Int = -1 // -1 = Tất cả
+    private var currentSubjectId: Int = -1
 
     private lateinit var tabContainer: LinearLayout
     private lateinit var rvQuestions: RecyclerView
-    private lateinit var btnMenu: android.widget.ImageView
+    private lateinit var btnMenu: ImageView
+
+    private lateinit var sessionManager: SessionManager // <-- THÊM BIẾN SESSION
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        // KHỞI TẠO SESSION MANAGER
+        sessionManager = SessionManager(requireContext())
+
+        // ===== LOGIC BẢO VỆ MÀN HÌNH (QUAN TRỌNG NHẤT) =====
+        if (sessionManager.getUserRole() != "admin") {
+            // Nếu không phải admin, không cho phép truy cập
+            Toast.makeText(requireContext(), "Bạn không có quyền truy cập chức năng này!", Toast.LENGTH_LONG).show()
+
+            // Tự động quay lại màn hình trước đó
+            parentFragmentManager.popBackStack()
+
+            // Trả về một View trống hoặc null để không vẽ bất cứ thứ gì
+            return null
+        }
+
+        // Nếu là admin, tiếp tục tạo view như bình thường
         return inflater.inflate(R.layout.fragment_management, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         try {
-            // Initialize database helper
+            // Khởi tạo các thành phần khác
             dbHelper = DatabaseHelper(requireContext())
 
             setControl(view)
             setEvent()
 
-            // Initial data load
+            // Tải dữ liệu ban đầu
             loadSubjectsAndCreateTabs()
             loadQuestionsForCurrentTab()
 
@@ -56,24 +79,23 @@ class ManagementFragment : Fragment() {
         }
     }
 
-    // Initialize views
+    // Ánh xạ views
     private fun setControl(view: View) {
         tabContainer = view.findViewById(R.id.tabContainer)
         rvQuestions = view.findViewById(R.id.rvQuestions)
         btnMenu = view.findViewById(R.id.btnMenu)
 
-        // Setup RecyclerView
         setupRecyclerView()
     }
 
-    // Setup event listeners
+    // Cài đặt sự kiện
     private fun setEvent() {
         btnMenu.setOnClickListener { showPopupMenu(it) }
     }
 
     override fun onResume() {
         super.onResume()
-        // Khi quay lại màn hình này, tải lại dữ liệu để cập nhật thay đổi (ví dụ: vừa thêm môn học mới)
+        // Kiểm tra dbHelper đã khởi tạo chưa trước khi dùng
         if (::dbHelper.isInitialized) {
             loadSubjectsAndCreateTabs()
             loadQuestionsForCurrentTab()
@@ -83,22 +105,21 @@ class ManagementFragment : Fragment() {
     private fun setupRecyclerView() {
         adapter = QuestionAdapter(
             mutableListOf(),
-            onDelete = { question ->
-                // Xử lý sự kiện xóa câu hỏi
-                showDeleteConfirmationDialog(question)
-            },
-            onItemClick = { question ->
-                // Chuyển sang màn hình sửa câu hỏi
-                navigateTo(TaoCauHoiFragment.newInstance(question.id))
-            }
+            onDelete = { question -> showDeleteConfirmationDialog(question) },
+            onItemClick = { question -> navigateTo(TaoCauHoiFragment.newInstance(question.id)) }
         )
         rvQuestions.layoutManager = LinearLayoutManager(requireContext())
         rvQuestions.adapter = adapter
     }
 
+    // THÊM MỤC "ĐĂNG XUẤT" VÀO MENU
     private fun showPopupMenu(view: View) {
-        val popup = android.widget.PopupMenu(requireContext(), view)
+        val popup = PopupMenu(requireContext(), view)
         popup.menuInflater.inflate(R.menu.management_menu, popup.menu)
+
+        // THÊM MỘT ITEM MỚI VÀO MENU (HOẶC TẠO FILE MENU MỚI)
+        popup.menu.add(0, R.id.action_logout, 100, "Đăng xuất")
+
         popup.setOnMenuItemClickListener { item ->
             when (item.itemId) {
                 R.id.action_history -> {
@@ -113,6 +134,14 @@ class ManagementFragment : Fragment() {
                     navigateTo(SubjectManagementFragment())
                     true
                 }
+                R.id.action_logout -> { // <-- XỬ LÝ SỰ KIỆN ĐĂNG XUẤT
+                    sessionManager.logoutUser()
+                    val intent = Intent(activity, AuthActivity::class.java)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                    startActivity(intent)
+                    activity?.finish()
+                    true
+                }
                 else -> false
             }
         }
@@ -123,23 +152,18 @@ class ManagementFragment : Fragment() {
         subjectsList.clear()
         subjectsList.addAll(dbHelper.getAllSubjects())
 
-        // Tạo lại các tab động
         tabContainer.removeAllViews()
         tabViews.clear()
 
-        // Thêm tab "Tất cả"
         val allTab = createTabView("Tất cả", -1)
         tabContainer.addView(allTab)
         tabViews.add(allTab)
 
-        // Thêm tab cho từng môn học
         for (subject in subjectsList) {
             val tabView = createTabView(subject.name, subject.id)
             tabContainer.addView(tabView)
             tabViews.add(tabView)
         }
-
-        // Chọn lại tab đang active
         updateTabSelection()
     }
 
@@ -191,7 +215,7 @@ class ManagementFragment : Fragment() {
                 dbHelper.getQuestionsBySubject(currentSubjectId)
             }
             allQuestions.addAll(questions)
-            adapter.updateQuestions(allQuestions.toList()) // Cập nhật adapter với danh sách mới
+            adapter.updateQuestions(allQuestions.toList())
         } catch (e: Exception) {
             Log.e("ManagementFragment", "Lỗi tải câu hỏi: ${e.message}", e)
             Toast.makeText(requireContext(), "Lỗi tải câu hỏi: ${e.message}", Toast.LENGTH_SHORT).show()
@@ -206,7 +230,7 @@ class ManagementFragment : Fragment() {
                 try {
                     dbHelper.deleteQuestion(question.id)
                     Toast.makeText(requireContext(), "Đã xóa câu hỏi", Toast.LENGTH_SHORT).show()
-                    loadQuestionsForCurrentTab() // Tải lại danh sách sau khi xóa
+                    loadQuestionsForCurrentTab()
                 } catch (e: Exception) {
                     Log.e("ManagementFragment", "Lỗi khi xóa câu hỏi: ${e.message}", e)
                     Toast.makeText(requireContext(), "Lỗi khi xóa: ${e.message}", Toast.LENGTH_SHORT).show()

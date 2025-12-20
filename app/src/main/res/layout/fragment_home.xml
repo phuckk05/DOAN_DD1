@@ -1,63 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp"
     tools:context=".fragment.HomeFragment">
 
-    <!-- Header -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:layout_marginBottom="24dp">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Home"
-            android:textColor="#000000"
-            android:textSize="28sp"
-            android:textStyle="bold" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/tvCreate"
-            style="@style/Widget.MaterialComponents.Button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Tạo đề"
-            android:textAllCaps="false"
-            android:textColor="@android:color/white"
-            app:backgroundTint="#3D4AFA"
-            app:cornerRadius="8dp"
-            app:icon="@drawable/ic_add_24"
-            app:iconGravity="textStart"
-            app:iconTint="@android:color/white" />
-
-    </LinearLayout>
-
-    <!-- Danh sách đề label -->
+    <!-- TIÊU ĐỀ -->
     <TextView
-        android:layout_width="match_parent"
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Danh sách đề"
-        android:textSize="14sp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:text="Danh sách đề thi"
+        android:textSize="24sp"
         android:textStyle="bold"
-        android:textColor="#000000"
-        android:layout_marginBottom="12dp" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Test List RecyclerView -->
+    <!-- ======================================================= -->
+    <!-- NÚT ĐĂNG XUẤT - SẼ LUÔN HIỂN THỊ CHO CẢ USER VÀ ADMIN     -->
+    <!-- ======================================================= -->
+    <Button
+        android:id="@+id/btnLogout"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:text="Đăng xuất"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- DANH SÁCH ĐỀ THI -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvTestList"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_marginTop="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_button_container"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvTitle"
         tools:listitem="@layout/item_test" />
 
-</LinearLayout>
+    <!-- CONTAINER CHO CÁC NÚT Ở DƯỚI -->
+    <LinearLayout
+        android:id="@+id/bottom_button_container"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
+        <!-- NÚT XEM LỊCH SỬ - LUÔN HIỂN THỊ -->
+        <Button
+            android:id="@+id/btnHistory"
+            style="?android:attr/buttonBarButtonStyle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="1"
+            android:text="Lịch sử" />
+
+        <!-- NÚT TẠO ĐỀ THI - CHỈ ADMIN MỚI THẤY -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCreateTest"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_weight="1"
+            android:text="Tạo đề thi"/>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

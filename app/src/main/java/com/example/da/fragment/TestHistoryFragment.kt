@@ -20,15 +20,18 @@ class TestHistoryFragment : Fragment() {
     private var testId: Int = -1
     private lateinit var dbHelper: DatabaseHelper
 
+    // Khai báo các View
     private lateinit var ivBack: ImageView
     private lateinit var tvTestTitle: TextView
     private lateinit var rvTestHistory: RecyclerView
     private lateinit var btnStartTest: Button
+    private lateinit var btnViewAllHistory: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // Lấy testId từ arguments
         arguments?.let {
-            testId = it.getInt("testId")
+            testId = it.getInt("testId", -1)
         }
     }
 
@@ -48,22 +51,29 @@ class TestHistoryFragment : Fragment() {
         setEvent()
     }
 
-    // Initialize views
+    // Ánh xạ các View từ layout
     private fun setControl(view: View) {
         ivBack = view.findViewById(R.id.ivBack)
         tvTestTitle = view.findViewById(R.id.tvTestTitle)
         rvTestHistory = view.findViewById(R.id.rvTestHistory)
         btnStartTest = view.findViewById(R.id.btnStartTest)
+        btnViewAllHistory = view.findViewById(R.id.btnViewAllHistory)
     }
 
-    // Setup event listeners
+    // Cài đặt các trình xử lý sự kiện
     private fun setEvent() {
+        // Lấy thông tin đề thi và hiển thị tiêu đề
         val test = dbHelper.getTestById(testId)
         tvTestTitle.text = test?.name ?: "Lịch sử làm bài"
 
+        // Lấy kết quả thi của đề này và hiển thị lên RecyclerView
         val testResults = dbHelper.getTestResults(testId)
         val adapter = TestHistoryAdapter(testResults) { result ->
-            val viewAnswersFragment = ViewAnswersFragment.newInstance(result.testId)
+            // =======================================================
+            //  SỬA LỖI Ở ĐÂY: ĐỔI `result.resultId` THÀNH `result.id`
+            // =======================================================
+            val viewAnswersFragment = ViewAnswersFragment.newInstance(result.id) // <-- ĐÃ SỬA
+
             parentFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, viewAnswersFragment)
                 .addToBackStack(null)
@@ -72,10 +82,12 @@ class TestHistoryFragment : Fragment() {
         rvTestHistory.adapter = adapter
         rvTestHistory.layoutManager = LinearLayoutManager(context)
 
+        // Sự kiện cho nút quay lại
         ivBack.setOnClickListener {
             parentFragmentManager.popBackStack()
         }
 
+        // Sự kiện cho nút Làm bài
         btnStartTest.setOnClickListener {
             val doTestFragment = DoTestFragment.newInstance(testId)
             parentFragmentManager.beginTransaction()
@@ -83,15 +95,26 @@ class TestHistoryFragment : Fragment() {
                 .addToBackStack(null)
                 .commit()
         }
+
+        // Sự kiện cho nút "TẤT CẢ LỊCH SỬ"
+        btnViewAllHistory.setOnClickListener {
+            // Chuyển sang màn hình HistoryFragment để xem toàn bộ lịch sử
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, HistoryFragment())
+                .addToBackStack(null) // Cho phép người dùng nhấn back để quay lại
+                .commit()
+        }
     }
 
     override fun onResume() {
         super.onResume()
+        // Ẩn thanh điều hướng dưới cùng khi vào màn hình này
         (activity as? MainActivity)?.showBottomNavigation(false)
     }
 
     override fun onPause() {
         super.onPause()
+        // Hiện lại thanh điều hướng dưới cùng khi rời khỏi màn hình này
         (activity as? MainActivity)?.showBottomNavigation(true)
     }
 
