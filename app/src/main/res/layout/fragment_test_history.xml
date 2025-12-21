@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/app_background_cream"
     tools:context=".fragment.TestHistoryFragment">
 
@@ -24,6 +24,7 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:contentDescription="Quay lại" />
 
+        <!-- Tiêu đề đã được gộp lại thành một TextView duy nhất -->
         <TextView
             android:id="@+id/tvTestTitle"
             android:layout_width="wrap_content"
@@ -31,20 +32,11 @@
             android:layout_centerInParent="true"
             android:layout_toEndOf="@+id/ivBack"
             android:gravity="center"
-            android:text=" Lịch sử làm bài "
+            android:lineSpacingMultiplier="1.2"
             android:textColor="@color/app_title_text_moss"
             android:textSize="20sp"
-            android:textStyle="bold" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_toEndOf="@+id/ivBack"
-            android:gravity="center"
-            android:text="\n \nMinh Vũ"
-            android:textColor="@color/app_title_text_moss"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            tools:text="Lịch sử làm bài\n(Minh Vũ)" />
     </RelativeLayout>
 
     <!-- Danh sách lịch sử của đề thi này -->
@@ -56,6 +48,9 @@
         android:layout_above="@+id/bottom_button_container"
         android:padding="8dp" />
 
+    <!-- ======================================================= -->
+    <!--     KHUNG CHỨA CÁC NÚT ĐÃ ĐƯỢC GỘP LẠI VÀ SẮP XẾP     -->
+    <!-- ======================================================= -->
     <LinearLayout
         android:id="@+id/bottom_button_container"
         android:layout_width="match_parent"
@@ -68,6 +63,7 @@
         android:paddingBottom="16dp"
         android:paddingTop="8dp">
 
+        <!-- Nút Tất cả lịch sử -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnViewAllHistory"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
@@ -77,14 +73,26 @@
             android:layout_marginEnd="8dp"
             android:textColor="@color/app_title_text_moss"
             app:strokeColor="@color/app_title_text_moss"
-            android:text="Tất cả lịch sử" />
+            android:text="Tất cả" />
 
+        <!-- Nút Thi thử (Thêm từ code ở trên) -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnPracticeTest"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginEnd="8dp"
+            android:textColor="@color/app_title_text_moss"
+            app:strokeColor="@color/app_title_text_moss"
+            android:text="Thi thử" />
+
+        <!-- Nút Làm bài -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnStartTest"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:layout_marginStart="8dp"
             android:textColor="@color/app_subtext_dark_brown"
             app:backgroundTint="@color/app_accent_mustard"
             android:text="Làm bài" />
@@ -92,4 +100,3 @@
     </LinearLayout>
 
 </RelativeLayout>
-
