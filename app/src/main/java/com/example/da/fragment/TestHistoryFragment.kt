@@ -32,6 +32,8 @@ class TestHistoryFragment : Fragment() {
     private lateinit var rvTestHistory: RecyclerView
     private lateinit var btnStartTest: Button
     private lateinit var btnViewAllHistory: Button
+    private lateinit var btnPracticeTest: Button
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,23 +67,21 @@ class TestHistoryFragment : Fragment() {
         tvTestTitle = view.findViewById(R.id.tvTestTitle)
         rvTestHistory = view.findViewById(R.id.rvTestHistory)
         btnStartTest = view.findViewById(R.id.btnStartTest)
+        btnPracticeTest = view.findViewById(R.id.btnPracticeTest)
         btnViewAllHistory = view.findViewById(R.id.btnViewAllHistory)
     }
 
     private fun setEvent() {
-        // ====================================================================
-        // BƯỚC 4: THÊM LOGIC KIỂM TRA ADMIN VÀO ĐẦU HÀM `setEvent()` (Quan trọng nhất)
-        // ====================================================================
+
         if (sessionManager.getUserRole() == "admin") {
             // Nếu là admin, ẩn nút "Làm bài" đi
             btnStartTest.visibility = View.GONE
+            btnPracticeTest.visibility = View.GONE
         } else {
             // Nếu không phải admin (là user), thì hiện nút đó lên
             btnStartTest.visibility = View.VISIBLE
+            btnPracticeTest.visibility = View.VISIBLE
         }
-        // ====================================================================
-        //  Tất cả code còn lại của bạn được giữ nguyên, không thay đổi gì
-        // ====================================================================
 
         val test = dbHelper.getTestById(testId)
         tvTestTitle.text = test?.name ?: "Lịch sử làm bài"
@@ -100,7 +100,13 @@ class TestHistoryFragment : Fragment() {
         ivBack.setOnClickListener {
             parentFragmentManager.popBackStack()
         }
-
+        btnPracticeTest.setOnClickListener {
+            val practiceTestFragment = PracticeTestFragment.newInstance(testId)
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, practiceTestFragment)
+                .addToBackStack(null)
+                .commit()
+        }
         btnStartTest.setOnClickListener {
             val doTestFragment = DoTestFragment.newInstance(testId)
             parentFragmentManager.beginTransaction()
