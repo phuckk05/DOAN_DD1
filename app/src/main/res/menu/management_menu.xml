@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/action_history"
+        android:title="Xem Lịch Sử Làm Bài" />
+    <item
+        android:id="@+id/action_create_question"
+        android:title="Tạo câu hỏi" />
+    <item
+        android:id="@+id/action_manage_subjects"
+        android:title="QL Môn học" />
+</menu>
+

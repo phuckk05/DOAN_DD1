@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/app_background_cream"
+    android:paddingTop="16dp">
+
+    <!-- Header App Bar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:background="@color/app_background_cream"
+        android:elevation="4dp">
+
+        <TextView
+            android:id="@+id/ivBackSubject"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="&lt;"
+            android:textSize="28sp"
+            android:textColor="@color/app_title_text_moss"
+            android:padding="8dp"
+            android:clickable="true"
+            android:focusable="true" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Tạo Môn Học (Đình Phúc)"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/app_title_text_moss"
+            android:paddingStart="8dp" />
+
+        <TextView
+            android:id="@+id/tvAddSubject"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Thêm"
+            android:textSize="14sp"
+            android:textColor="@color/app_accent_mustard"
+            android:padding="12dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <!-- Divider -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/app_accent_mustard" />
+
+    <!-- Content -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Subject Name Input -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tên môn học*"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="@color/app_subtext_dark_brown"
+                android:layout_marginBottom="8dp" />
+
+            <EditText
+                android:id="@+id/etSubjectName"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:hint="Nhập tên môn học"
+                android:padding="12dp"
+                android:textSize="14sp"
+                android:background="@drawable/edittext_background"
+                android:textColor="@color/app_subtext_dark_brown"
+                android:textColorHint="@color/app_subtext_dark_brown"
+                android:inputType="text" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
