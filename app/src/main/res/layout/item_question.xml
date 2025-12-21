@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="12dp"
+    app:cardCornerRadius="10dp"
+    app:cardElevation="0dp"
+    android:foreground="?attr/selectableItemBackground">
+
+    <!-- Thay đổi nền và các màu bên trong -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="14dp"
+        android:background="@color/app_card_coral"> <!-- << NỀN ĐÃ ĐƯỢC ĐỔI SANG MÀU HỒNG SAN HÔ -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tvQuestion"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/sample_question"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/app_subtext_dark_brown" /> <!-- Giữ màu Nâu đen vì nó đọc tốt trên nền hồng -->
+
+            <ImageView
+                android:id="@+id/ivDelete"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:src="@drawable/ic_delete_24"
+                android:contentDescription="@string/cd_delete_icon"
+                android:padding="4dp"
+                android:foreground="?attr/selectableItemBackgroundBorderless"
+                app:tint="@color/app_subtext_dark_brown" /> <!-- << ĐỔI MÀU ICON ĐỂ TƯƠNG PHẢN TỐT HƠN -->
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvDifficulty"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/muc_do_de_label"
+            android:textSize="13sp"
+            android:textColor="@color/app_background_cream"
+            android:layout_marginTop="6dp" /> <!-- << ĐỔI MÀU MỨC ĐỘ ĐỂ TẠO SỰ TINH TẾ -->
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

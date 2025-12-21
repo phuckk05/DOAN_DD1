@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/app_background_cream"
+    android:padding="16dp"
+    tools:context=".fragment.HistoryFragment">
+
+    <!-- TIÊU ĐỀ MÀN HÌNH -->
+    <TextView
+        android:id="@+id/tvTieuDe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="LỊCH SỬ LÀM BÀI (Minh Quân)"
+        android:textColor="@color/app_title_text_moss"
+        android:textSize="23sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="16dp"
+        android:layout_gravity="center_horizontal" />
+
+    <!-- THANH TÌM KIẾM -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="16dp"
+        android:gravity="center_vertical">
+
+        <EditText
+            android:id="@+id/etSearchTenDe"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="50dp"
+            android:hint="Tìm kiếm Tên đề..."
+            android:inputType="text"
+            android:background="@drawable/edittext_background"
+            android:textColor="@color/app_subtext_dark_brown"
+            android:textColorHint="@color/app_subtext_dark_brown"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp" />
+
+        <Button
+            android:id="@+id/btnSearchTenDe"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tìm"
+            android:textStyle="bold"
+            android:backgroundTint="@color/app_accent_mustard"
+            android:textColor="@color/app_subtext_dark_brown"
+            android:layout_marginStart="8dp"/>
+    </LinearLayout>
+
+    <!-- BỘ LỌC -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:background="@drawable/edittext_background"
+        android:padding="8dp"
+        android:layout_marginBottom="8dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Lọc:"
+            android:textColor="@color/app_title_text_moss"
+            android:textSize="14sp"
+            android:layout_marginEnd="6dp" />
+
+        <Spinner
+            android:id="@+id/spinnerLoaiLoc"
+            android:layout_width="0dp"
+            android:layout_weight="1.5"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="12dp"
+            android:backgroundTint="@color/app_title_text_moss" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Giá trị:"
+            android:textColor="@color/app_title_text_moss"
+            android:textSize="14sp"
+            android:layout_marginEnd="6dp" />
+
+        <Spinner
+            android:id="@+id/spinnerGiaTriLoc"
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/app_title_text_moss"/>
+    </LinearLayout>
+
+    <!-- TIÊU ĐỀ CỦA BẢNG DỮ LIỆU -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/app_title_text_moss"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1.5"
+            android:layout_height="wrap_content"
+            android:text="Môn học"
+            android:textColor="@color/app_background_cream"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/tvTenDeHeader"
+            android:layout_width="0dp"
+            android:layout_weight="2.5"
+            android:layout_height="wrap_content"
+            android:text="Tên đề"
+            android:textColor="@color/app_background_cream"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:textSize="12sp" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="Điểm"
+            android:textColor="@color/app_background_cream"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:textSize="12sp" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="2"
+            android:layout_height="wrap_content"
+            android:text="Ngày làm"
+            android:textColor="@color/app_background_cream"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:textSize="12sp" />
+    </LinearLayout>
+
+    <!-- DANH SÁCH LỊCH SỬ -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        tools:listitem="@layout/item_history" />
+
+    <!-- NÚT TRỞ VỀ -->
+    <Button
+        android:id="@+id/btnTroVeTrangChu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Trở về trang chủ"
+        android:textStyle="bold"
+        android:backgroundTint="@color/app_card_coral"
+        android:textColor="@color/app_subtext_dark_brown"
+        android:layout_marginTop="16dp" />
+
+</LinearLayout>

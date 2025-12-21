@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?><resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <color name="app_background_cream">#FDFBF1</color>
+    <color name="app_title_text_moss">#4A4D1E</color>
+    <color name="app_card_coral">#FFADB0</color>
+    <color name="app_subtext_dark_brown">#2D2621</color>
+    <color name="app_accent_mustard">#E8C547</color>
+
+    <color name="text_secondary">@color/app_subtext_dark_brown</color>
+    <color name="text_primary">@color/app_subtext_dark_brown</color>
+
+    <color name="primary">@color/app_title_text_moss</color>
+    <color name="primary_variant">@color/app_title_text_moss</color>
+    <color name="secondary">@color/app_accent_mustard</color>
+    <color name="accent">@color/app_accent_mustard</color>
+    <color name="text_on_primary">@color/app_background_cream</color>
+    <color name="background_light">@color/app_background_cream</color>
+</resources>
