@@ -11,6 +11,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.da.R
+import com.example.da.SessionManager
 import com.example.da.activity.MainActivity
 import com.example.da.adapter.TestHistoryAdapter
 import com.example.da.database.DatabaseHelper
@@ -20,16 +21,22 @@ class TestHistoryFragment : Fragment() {
     private var testId: Int = -1
     private lateinit var dbHelper: DatabaseHelper
 
+    // ===============================================
+    // BƯỚC 2: THÊM KHAI BÁO CHO SESSION MANAGER
+    // ===============================================
+    private lateinit var sessionManager: SessionManager
+
+    // Khai báo các View
     private lateinit var ivBack: ImageView
     private lateinit var tvTestTitle: TextView
     private lateinit var rvTestHistory: RecyclerView
     private lateinit var btnStartTest: Button
-    private lateinit var btnPracticeTest: Button
+    private lateinit var btnViewAllHistory: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            testId = it.getInt("testId")
+            testId = it.getInt("testId", -1)
         }
     }
 
@@ -37,7 +44,6 @@ class TestHistoryFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_test_history, container, false)
     }
 
@@ -45,27 +51,44 @@ class TestHistoryFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         dbHelper = DatabaseHelper(requireContext())
 
+        // ===============================================
+        // BƯỚC 3: KHỞI TẠO SESSION MANAGER
+        // ===============================================
+        sessionManager = SessionManager(requireContext())
+
         setControl(view)
         setEvent()
     }
 
-    // Initialize views
     private fun setControl(view: View) {
         ivBack = view.findViewById(R.id.ivBack)
         tvTestTitle = view.findViewById(R.id.tvTestTitle)
         rvTestHistory = view.findViewById(R.id.rvTestHistory)
         btnStartTest = view.findViewById(R.id.btnStartTest)
-        btnPracticeTest = view.findViewById(R.id.btnPracticeTest)
+        btnViewAllHistory = view.findViewById(R.id.btnViewAllHistory)
     }
 
-    // Setup event listeners
     private fun setEvent() {
+        // ====================================================================
+        // BƯỚC 4: THÊM LOGIC KIỂM TRA ADMIN VÀO ĐẦU HÀM `setEvent()` (Quan trọng nhất)
+        // ====================================================================
+        if (sessionManager.getUserRole() == "admin") {
+            // Nếu là admin, ẩn nút "Làm bài" đi
+            btnStartTest.visibility = View.GONE
+        } else {
+            // Nếu không phải admin (là user), thì hiện nút đó lên
+            btnStartTest.visibility = View.VISIBLE
+        }
+        // ====================================================================
+        //  Tất cả code còn lại của bạn được giữ nguyên, không thay đổi gì
+        // ====================================================================
+
         val test = dbHelper.getTestById(testId)
         tvTestTitle.text = test?.name ?: "Lịch sử làm bài"
 
         val testResults = dbHelper.getTestResults(testId)
         val adapter = TestHistoryAdapter(testResults) { result ->
-            val viewAnswersFragment = ViewAnswersFragment.newInstance(result.testId)
+            val viewAnswersFragment = ViewAnswersFragment.newInstance(result.id)
             parentFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, viewAnswersFragment)
                 .addToBackStack(null)
@@ -86,10 +109,9 @@ class TestHistoryFragment : Fragment() {
                 .commit()
         }
 
-        btnPracticeTest.setOnClickListener {
-            val practiceTestFragment = PracticeTestFragment.newInstance(testId)
+        btnViewAllHistory.setOnClickListener {
             parentFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, practiceTestFragment)
+                .replace(R.id.fragment_container, HistoryFragment())
                 .addToBackStack(null)
                 .commit()
         }

@@ -18,7 +18,7 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
 
     companion object {
         private const val DATABASE_NAME = "QuizApp.db"
-        private const val DATABASE_VERSION = 7 // Tăng phiên bản để kích hoạt onUpgrade
+        private const val DATABASE_VERSION = 8 // Tăng phiên bản để kích hoạt onUpgrade
 
         // Table Subjects
         private const val TABLE_SUBJECTS = "subjects"
@@ -61,6 +61,15 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         private const val COLUMN_SCORE = "score" // REAL cho điểm thập phân
         private const val COLUMN_TIME_TAKEN_SECONDS = "time_taken_seconds"
         private const val COLUMN_RESULT_CREATED_AT = "created_at"
+
+        // THÊM MỚI: Khai báo cho bảng Users
+        private const val TABLE_USERS = "users"
+        private const val COLUMN_USER_ID = "user_id"
+        private const val COLUMN_USERNAME = "username"
+        private const val COLUMN_PASSWORD = "password"
+        private const val COLUMN_ROLE = "role" // "admin" hoặc "user"
+
+
     }
 
     override fun onCreate(db: SQLiteDatabase?) {
@@ -120,12 +129,42 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
             )
         """.trimIndent()
 
+        val createUsersTable = """
+        CREATE TABLE $TABLE_USERS (
+            $COLUMN_USER_ID INTEGER PRIMARY KEY AUTOINCREMENT,
+            $COLUMN_USERNAME TEXT NOT NULL UNIQUE,
+            $COLUMN_PASSWORD TEXT NOT NULL,
+            $COLUMN_ROLE TEXT NOT NULL
+        )
+    """.trimIndent()
+
+
+
         db?.execSQL(createSubjectsTable)
         db?.execSQL(createQuestionsTable)
         db?.execSQL(createAnswersTable)
         db?.execSQL(createTestsTable)
         db?.execSQL(createTestResultsTable)
         addSampleData(db)
+        db?.execSQL(createUsersTable) // Thực thi lệnh tạo bảng
+    }
+
+    private fun addSampleUsers(db: SQLiteDatabase?) {
+        // Tạo tài khoản Admin
+        val adminValues = ContentValues().apply {
+            put(COLUMN_USERNAME, "admin")
+            put(COLUMN_PASSWORD, "123") // CẢNH BÁO: Mật khẩu không an toàn
+            put(COLUMN_ROLE, "admin")
+        }
+        db?.insert(TABLE_USERS, null, adminValues)
+
+        // Tạo tài khoản User
+        val userValues = ContentValues().apply {
+            put(COLUMN_USERNAME, "user")
+            put(COLUMN_PASSWORD, "123") // CẢNH BÁO: Mật khẩu không an toàn
+            put(COLUMN_ROLE, "user")
+        }
+        db?.insert(TABLE_USERS, null, userValues)
     }
 
     override fun onUpgrade(db: SQLiteDatabase?, oldVersion: Int, newVersion: Int) {
@@ -134,91 +173,210 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         db?.execSQL("DROP TABLE IF EXISTS $TABLE_TESTS")
         db?.execSQL("DROP TABLE IF EXISTS $TABLE_TEST_RESULTS")
         db?.execSQL("DROP TABLE IF EXISTS $TABLE_SUBJECTS")
+        // THÊM MỚI: Lệnh xóa bảng Users
+        db?.execSQL("DROP TABLE IF EXISTS $TABLE_USERS")
+
+        // ... (các lệnh drop table cũ giữ nguyên)
+        db?.execSQL("DROP TABLE IF EXISTS $TABLE_ANSWERS")
         onCreate(db)
     }
 
     private fun addSampleData(db: SQLiteDatabase?) {
-        // Add sample subjects
-        val sampleSubjects = listOf("Toán", "Vật Lý", "Hóa Học", "Tiếng Anh")
-        val subjectIds = mutableListOf<Long>()
-        sampleSubjects.forEach { subjectName ->
+        // --- 1. Thêm Users ---
+        val adminValues = ContentValues().apply {
+            put(COLUMN_USERNAME, "admin")
+            put(COLUMN_PASSWORD, "123")
+            put(COLUMN_ROLE, "admin")
+        }
+        val adminId = db?.insert(TABLE_USERS, null, adminValues)
+
+        val userValues = ContentValues().apply {
+            put(COLUMN_USERNAME, "user")
+            put(COLUMN_PASSWORD, "123")
+            put(COLUMN_ROLE, "user")
+        }
+        val userId = db?.insert(TABLE_USERS, null, userValues)
+
+        // --- 2. Thêm Subjects ---
+        val subjects = mapOf("Toán" to 0L, "Vật Lý" to 0L, "Hóa Học" to 0L, "Tiếng Anh" to 0L).toMutableMap()
+        subjects.keys.forEach { subjectName ->
             val values = ContentValues().apply {
                 put(COLUMN_NAME, subjectName)
                 put(COLUMN_CREATED_AT, System.currentTimeMillis())
             }
-            val id = db?.insert(TABLE_SUBJECTS, null, values)
-            id?.let { subjectIds.add(it) }
+            val insertedId = db?.insert(TABLE_SUBJECTS, null, values)
+            if (insertedId != null) {
+                subjects[subjectName] = insertedId
+            }
+        }
+        val toanId = subjects["Toán"]!!
+        val lyId = subjects["Vật Lý"]!!
+        val hoaId = subjects["Hóa Học"]!!
+        val anhId = subjects["Tiếng Anh"]!!
+
+        // --- 3. Thêm 30 câu hỏi mẫu ---
+        fun addFullQuestion(subjectId: Long, text: String, difficulty: String, answers: List<Pair<String, Boolean>>) {
+            val questionValues = ContentValues().apply {
+                put(COLUMN_SUBJECT_ID, subjectId)
+                put(COLUMN_QUESTION_TEXT, text)
+                put(COLUMN_DIFFICULTY, difficulty)
+                put(COLUMN_IS_MULTIPLE_CHOICE, 0)
+            }
+            val questionId = db?.insert(TABLE_QUESTIONS, null, questionValues)
+
+            if (questionId != null && questionId != -1L) {
+                answers.forEach { (answerText, isCorrect) ->
+                    val answerValues = ContentValues().apply {
+                        put(COLUMN_ANSWER_QUESTION_ID, questionId)
+                        put(COLUMN_ANSWER_TEXT, answerText)
+                        put(COLUMN_IS_CORRECT, if (isCorrect) 1 else 0)
+                    }
+                    db?.insert(TABLE_ANSWERS, null, answerValues)
+                }
+            }
         }
 
-        // Add sample tests
-        val testIds = mutableListOf<Long>()
-        if (subjectIds.isNotEmpty()) {
-            val test1 = ContentValues().apply {
-                put(COLUMN_TEST_SUBJECT_ID, subjectIds[0]) // Toán
-                put(COLUMN_TEST_NAME, "Đề kiểm tra giữa kỳ Toán")
-                put(COLUMN_NUM_QUESTIONS, 15)
-                put(COLUMN_DURATION_MINUTES, 45)
-                put(COLUMN_ALLOW_MULTIPLE_ANSWERS, 0)
-                put(COLUMN_EASY_PERCENT, 40)
-                put(COLUMN_MEDIUM_PERCENT, 40)
-                put(COLUMN_HARD_PERCENT, 20)
-                put(COLUMN_TEST_CREATED_AT, System.currentTimeMillis())
-            }
-            testIds.add(db?.insert(TABLE_TESTS, null, test1) ?: 0L)
+        // Môn Toán (8 câu)
+        addFullQuestion(toanId, "Kết quả của phép tính 5 + 7 là bao nhiêu?", "Dễ", listOf("10" to false, "11" to false, "12" to true, "13" to false))
+        addFullQuestion(toanId, "Hình tam giác đều có mấy góc bằng nhau?", "Dễ", listOf("1" to false, "2" to false, "3" to true, "0" to false))
+        addFullQuestion(toanId, "Giải phương trình 2x - 8 = 0.", "Trung bình", listOf("x = 2" to false, "x = 4" to true, "x = -4" to false, "x = 8" to false))
+        addFullQuestion(toanId, "Tính diện tích hình chữ nhật có chiều dài 8cm và chiều rộng 5cm.", "Trung bình", listOf("30 cm²" to false, "40 cm²" to true, "13 cm²" to false, "45 cm²" to false))
+        addFullQuestion(toanId, "Tính đạo hàm của hàm số y = x³.", "Khó", listOf("3x" to false, "x²" to false, "3x²" to true, "3x³" to false))
+        addFullQuestion(toanId, "Logarit cơ số 10 của 100 là bao nhiêu?", "Khó", listOf("1" to false, "10" to false, "2" to true, "100" to false))
+        addFullQuestion(toanId, "Số nào sau đây là số nguyên tố?", "Dễ", listOf("9" to false, "15" to false, "17" to true, "21" to false))
+        addFullQuestion(toanId, "Giá trị tuyệt đối của -15 là bao nhiêu?", "Dễ", listOf("-15" to false, "15" to true, "0" to false, "1.5" to false))
 
-            val test2 = ContentValues().apply {
-                put(COLUMN_TEST_SUBJECT_ID, subjectIds[1]) // Vật Lý
-                put(COLUMN_TEST_NAME, "Đề thi cuối kỳ Vật Lý")
-                put(COLUMN_NUM_QUESTIONS, 20)
-                put(COLUMN_DURATION_MINUTES, 60)
-                put(COLUMN_ALLOW_MULTIPLE_ANSWERS, 0)
-                put(COLUMN_EASY_PERCENT, 30)
-                put(COLUMN_MEDIUM_PERCENT, 50)
-                put(COLUMN_HARD_PERCENT, 20)
-                put(COLUMN_TEST_CREATED_AT, System.currentTimeMillis() - 1000)
-            }
-            testIds.add(db?.insert(TABLE_TESTS, null, test2) ?: 0L)
+        // Môn Vật Lý (7 câu)
+        addFullQuestion(lyId, "Đơn vị đo điện áp là gì?", "Dễ", listOf("Ampe (A)" to false, "Ohm (Ω)" to false, "Volt (V)" to true, "Watt (W)" to false))
+        addFullQuestion(lyId, "Ánh sáng di chuyển nhanh nhất trong môi trường nào?", "Dễ", listOf("Nước" to false, "Thủy tinh" to false, "Chân không" to true, "Không khí" to false))
+        addFullQuestion(lyId, "Công thức của định luật Ohm là gì?", "Trung bình", listOf("P = U.I" to false, "I = U/R" to true, "Q = I².R.t" to false, "F = m.a" to false))
+        addFullQuestion(lyId, "Lực hấp dẫn giữa hai vật phụ thuộc vào yếu tố nào?", "Trung bình", listOf("Chỉ khối lượng" to false, "Chỉ khoảng cách" to false, "Khối lượng và khoảng cách" to true, "Nhiệt độ" to false))
+        addFullQuestion(lyId, "Âm thanh có tần số dưới 20Hz được gọi là gì?", "Khó", listOf("Siêu âm" to false, "Hạ âm" to true, "Tạp âm" to false, "Tiếng vang" to false))
+        addFullQuestion(lyId, "Hiện tượng ánh sáng bị lệch phương khi truyền qua mặt phân cách hai môi trường gọi là gì?", "Trung bình", listOf("Phản xạ" to false, "Khúc xạ" to true, "Nhiễu xạ" to false, "Tán sắc" to false))
+        addFullQuestion(lyId, "Năng lượng không thể tự sinh ra hoặc tự mất đi. Đây là phát biểu của định luật nào?", "Khó", listOf("Định luật III Newton" to false, "Định luật bảo toàn năng lượng" to true, "Định luật vạn vật hấp dẫn" to false, "Định luật Ohm" to false))
 
-            val test3 = ContentValues().apply {
-                put(COLUMN_TEST_SUBJECT_ID, subjectIds[2]) // Hóa Học
-                put(COLUMN_TEST_NAME, "Bài tập phản ứng hóa học")
-                put(COLUMN_NUM_QUESTIONS, 10)
-                put(COLUMN_DURATION_MINUTES, 30)
-                put(COLUMN_ALLOW_MULTIPLE_ANSWERS, 0)
-                put(COLUMN_EASY_PERCENT, 50)
-                put(COLUMN_MEDIUM_PERCENT, 50)
-                put(COLUMN_HARD_PERCENT, 0)
-                put(COLUMN_TEST_CREATED_AT, System.currentTimeMillis() - 2000)
-            }
-            testIds.add(db?.insert(TABLE_TESTS, null, test3) ?: 0L)
+        // Môn Hóa Học (8 câu)
+        addFullQuestion(hoaId, "Ký hiệu hóa học của Sắt là gì?", "Dễ", listOf("S" to false, "Fe" to true, "Au" to false, "Ag" to false))
+        addFullQuestion(hoaId, "Dung dịch bazơ làm giấy quỳ tím chuyển sang màu gì?", "Dễ", listOf("Màu đỏ" to false, "Màu xanh" to true, "Màu vàng" to false, "Không đổi màu" to false))
+        addFullQuestion(hoaId, "Trong bảng tuần hoàn, các nguyên tố được sắp xếp theo thứ tự tăng dần của...", "Trung bình", listOf("Số khối" to false, "Số proton" to true, "Số neutron" to false, "Bán kính nguyên tử" to false))
+        addFullQuestion(hoaId, "Phản ứng giữa axit và bazơ tạo ra sản phẩm gì?", "Trung bình", listOf("Muối và nước" to true, "Oxit và nước" to false, "Axit mới và bazơ mới" to false, "Chỉ có muối" to false))
+        addFullQuestion(hoaId, "Chất nào sau đây được dùng để sản xuất thủy tinh?", "Khó", listOf("NaCl" to false, "CaCO₃" to false, "SiO₂" to true, "Fe₂O₃" to false))
+        addFullQuestion(hoaId, "Liên kết hóa học trong phân tử NaCl là liên kết gì?", "Trung bình", listOf("Cộng hóa trị" to false, "Ion" to true, "Kim loại" to false, "Hydro" to false))
+        addFullQuestion(hoaId, "Polyme nào là thành phần chính của túi nilon?", "Khó", listOf("PVC" to false, "PE" to true, "PP" to false, "PS" to false))
+        addFullQuestion(hoaId, "Công thức hóa học của khí metan là gì?", "Dễ", listOf("C2H6" to false, "CH4" to true, "C3H8" to false, "C2H4" to false))
+
+        // Môn Tiếng Anh (7 câu)
+        addFullQuestion(anhId, "How many letters are there in the English alphabet?", "Dễ", listOf("24" to false, "25" to false, "26" to true, "27" to false))
+        addFullQuestion(anhId, "What is the opposite of 'hot'?", "Dễ", listOf("Warm" to false, "Cold" to true, "Cool" to false, "Spicy" to false))
+        addFullQuestion(anhId, "This is the ... interesting book I have ever read.", "Trung bình", listOf("more" to false, "most" to true, "much" to false, "many" to false))
+        addFullQuestion(anhId, "She has been living here ___ 2010.", "Trung bình", listOf("for" to false, "since" to true, "at" to false, "on" to false))
+        addFullQuestion(anhId, "Despite ___ hard, he failed the exam.", "Khó", listOf("study" to false, "of studying" to false, "studying" to true, "he studied" to false))
+        addFullQuestion(anhId, "The plural of 'child' is ...", "Dễ", listOf("childs" to false, "children" to true, "childes" to false, "childrens" to false))
+        addFullQuestion(anhId, "If I were a bird, I ... fly.", "Trung bình", listOf("will" to false, "can" to false, "would" to true, "should" to false))
+
+        // --- 4. Thêm các Đề thi mẫu ---
+        val test1Values = ContentValues().apply {
+            put(COLUMN_TEST_SUBJECT_ID, toanId)
+            put(COLUMN_TEST_NAME, "Đề kiểm tra giữa kỳ Toán")
+            put(COLUMN_NUM_QUESTIONS, 5)
+            put(COLUMN_DURATION_MINUTES, 15)
+            put(COLUMN_ALLOW_MULTIPLE_ANSWERS, 0)
+            put(COLUMN_EASY_PERCENT, 40)
+            put(COLUMN_MEDIUM_PERCENT, 40)
+            put(COLUMN_HARD_PERCENT, 20)
+            put(COLUMN_TEST_CREATED_AT, System.currentTimeMillis())
         }
+        val testId1 = db?.insert(TABLE_TESTS, null, test1Values)
 
-        // Add sample test results for history
-        if (testIds.isNotEmpty()) {
-            // 1. Toán - Trung bình (35 phút, 8.5 điểm, Tháng 11)
-            db?.insert(TABLE_TEST_RESULTS, null, ContentValues().apply {
-                put(COLUMN_RESULT_TEST_ID, testIds[0])
-                put(COLUMN_SCORE, 8.5)
-                put(COLUMN_TIME_TAKEN_SECONDS, 35 * 60)
-                put(COLUMN_RESULT_CREATED_AT, System.currentTimeMillis() - 86400000)
-            })
-            // 2. Vật Lý - Khó (59.5 phút, 5.0 điểm, Tháng 10)
-            db?.insert(TABLE_TEST_RESULTS, null, ContentValues().apply {
-                put(COLUMN_RESULT_TEST_ID, testIds[1])
-                put(COLUMN_SCORE, 5.0)
-                put(COLUMN_TIME_TAKEN_SECONDS, 59 * 60 + 30)
-                put(COLUMN_RESULT_CREATED_AT, System.currentTimeMillis() - 30L * 86400000)
-            })
-            // 3. Hóa Học - Dễ (20 phút, 9.8 điểm, Tháng 9)
-            db?.insert(TABLE_TEST_RESULTS, null, ContentValues().apply {
-                put(COLUMN_RESULT_TEST_ID, testIds[2])
-                put(COLUMN_SCORE, 9.8)
-                put(COLUMN_TIME_TAKEN_SECONDS, 20 * 60)
-                put(COLUMN_RESULT_CREATED_AT, System.currentTimeMillis() - 60L * 86400000)
-            })
+        val test2Values = ContentValues().apply {
+            put(COLUMN_TEST_SUBJECT_ID, lyId)
+            put(COLUMN_TEST_NAME, "Đề thi cuối kỳ Vật Lý")
+            put(COLUMN_NUM_QUESTIONS, 5)
+            put(COLUMN_DURATION_MINUTES, 20)
+            put(COLUMN_ALLOW_MULTIPLE_ANSWERS, 0)
+            put(COLUMN_EASY_PERCENT, 30)
+            put(COLUMN_MEDIUM_PERCENT, 50)
+            put(COLUMN_HARD_PERCENT, 20)
+            put(COLUMN_TEST_CREATED_AT, System.currentTimeMillis() - 1000)
+        }
+        val testId2 = db?.insert(TABLE_TESTS, null, test2Values)
+
+        // --- 5. Thêm Lịch sử làm bài mẫu cho tài khoản 'user' ---
+        if (userId != null && userId != -1L) {
+            if (testId1 != null && testId1 != -1L) {
+                val result1Values = ContentValues().apply {
+                    put(COLUMN_RESULT_TEST_ID, testId1)
+                    put(COLUMN_SCORE, 8.5)
+                    put(COLUMN_TIME_TAKEN_SECONDS, 12 * 60)
+                    put(COLUMN_RESULT_CREATED_AT, System.currentTimeMillis() - 86400000L)
+                }
+                db?.insert(TABLE_TEST_RESULTS, null, result1Values)
+            }
+            if (testId2 != null && testId2 != -1L) {
+                val result2Values = ContentValues().apply {
+                    put(COLUMN_RESULT_TEST_ID, testId2)
+                    put(COLUMN_SCORE, 6.0)
+                    put(COLUMN_TIME_TAKEN_SECONDS, 18 * 60)
+                    put(COLUMN_RESULT_CREATED_AT, System.currentTimeMillis() - 2 * 86400000L)
+                }
+                db?.insert(TABLE_TEST_RESULTS, null, result2Values)
+            }
         }
     }
 
+
+    fun addUser(username: String, password: String, role: String = "user"): Long {
+        // LƯU Ý: Trong thực tế, bạn PHẢI mã hóa mật khẩu trước khi lưu.
+        // Ví dụ: val hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt())
+        val db = writableDatabase
+        val values = ContentValues().apply {
+            put(COLUMN_USERNAME, username)
+            put(COLUMN_PASSWORD, password) // Lưu mật khẩu đã được mã hóa
+            put(COLUMN_ROLE, role)
+        }
+        val id = db.insert(TABLE_USERS, null, values)
+        db.close()
+        return id
+    }
+
+    /**
+     * Kiểm tra thông tin đăng nhập của người dùng.
+     * @param username Tên đăng nhập.
+     * @param password Mật khẩu (chưa mã hóa).
+     * @return Một cặp (Pair) chứa vai trò (role) và ID (user_id) nếu đăng nhập thành công, ngược lại trả về null.
+     */
+    @SuppressLint("Range")
+    fun checkUser(username: String, password: String): Pair<String, Int>? {
+        val db = readableDatabase
+        // Khi kiểm tra, bạn cũng cần so sánh với mật khẩu đã được mã hóa trong DB.
+        val cursor = db.rawQuery(
+            "SELECT $COLUMN_ROLE, $COLUMN_USER_ID FROM $TABLE_USERS WHERE $COLUMN_USERNAME = ? AND $COLUMN_PASSWORD = ?",
+            arrayOf(username, password)
+        )
+        var result: Pair<String, Int>? = null
+        if (cursor.moveToFirst()) {
+            val role = cursor.getString(cursor.getColumnIndex(COLUMN_ROLE))
+            val userId = cursor.getInt(cursor.getColumnIndex(COLUMN_USER_ID))
+            result = Pair(role, userId)
+        }
+        cursor.close()
+        db.close()
+        return result
+    }
+
+    /**
+     * Kiểm tra xem một tên đăng nhập đã tồn tại trong cơ sở dữ liệu hay chưa.
+     * @param username Tên đăng nhập cần kiểm tra.
+     * @return true nếu đã tồn tại, false nếu chưa.
+     */
+    fun isUserExists(username: String): Boolean {
+        val db = readableDatabase
+        val cursor = db.rawQuery("SELECT 1 FROM $TABLE_USERS WHERE $COLUMN_USERNAME = ?", arrayOf(username))
+        val exists = cursor.count > 0
+        cursor.close()
+        db.close()
+        return exists
+    }
     // --- LOGIC LỌC KHÁC (Hàm phụ trợ) ---
 
     private fun isScoreInRange(diemString: String, range: String): Boolean {

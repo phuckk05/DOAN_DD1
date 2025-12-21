@@ -3,8 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/app_background_cream"
     tools:context=".fragment.TestHistoryFragment">
 
+    <!-- Thanh tiêu đề -->
     <RelativeLayout
         android:id="@+id/header"
         android:layout_width="match_parent"
@@ -13,49 +16,80 @@
 
         <ImageView
             android:id="@+id/ivBack"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:padding="8dp"
             android:src="@drawable/ic_back"
-            android:layout_centerVertical="true"/>
+            android:layout_centerVertical="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Quay lại" />
 
         <TextView
             android:id="@+id/tvTestTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="Lịch sử làm bài"
+            android:layout_toEndOf="@+id/ivBack"
+            android:gravity="center"
+            android:text=" Lịch sử làm bài "
+            android:textColor="@color/app_title_text_moss"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_toEndOf="@+id/ivBack"
+            android:gravity="center"
+            android:text="\n \nMinh Vũ"
+            android:textColor="@color/app_title_text_moss"
             android:textSize="20sp"
             android:textStyle="bold" />
     </RelativeLayout>
 
-    <LinearLayout
-        android:id="@+id/bottomButtons"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:orientation="vertical"
-        android:padding="16dp">
-
-        <Button
-            android:id="@+id/btnPracticeTest"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:text="Thi thử" />
-
-        <Button
-            android:id="@+id/btnStartTest"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Làm bài" />
-    </LinearLayout>
-
+    <!-- Danh sách lịch sử của đề thi này -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvTestHistory"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/header"
-        android:layout_above="@+id/bottomButtons"
+        android:layout_above="@+id/bottom_button_container"
         android:padding="8dp" />
 
+    <LinearLayout
+        android:id="@+id/bottom_button_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:background="@color/app_background_cream"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="16dp"
+        android:paddingTop="8dp">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnViewAllHistory"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginEnd="8dp"
+            android:textColor="@color/app_title_text_moss"
+            app:strokeColor="@color/app_title_text_moss"
+            android:text="Tất cả lịch sử" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnStartTest"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="8dp"
+            android:textColor="@color/app_subtext_dark_brown"
+            app:backgroundTint="@color/app_accent_mustard"
+            android:text="Làm bài" />
+
+    </LinearLayout>
+
 </RelativeLayout>
+

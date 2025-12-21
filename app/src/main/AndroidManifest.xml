@@ -12,14 +12,27 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DA"
         tools:targetApi="31">
+        -->
         <activity
-            android:name=".activity.MainActivity"
+            android:name=".activity.AuthActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+
+        <!--
+        ====================================================================
+        MainActivity LÀ MÀN HÌNH BÊN TRONG ỨNG DỤNG
+        Nó không phải là màn hình khởi động nữa nên ta XÓA intent-filter.
+        Nó sẽ được gọi từ LoginFragment sau khi đăng nhập thành công.
+        ====================================================================
+        -->
+        <activity
+            android:name=".activity.MainActivity"
+            android:exported="true">
+            <!-- KHÔNG CÓ intent-filter ở đây -->
         </activity>
     </application>
 

@@ -12,8 +12,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="Thêm đáp án"
-        android:textColor="#3D4AFA"
+        android:text="⊕ Thêm đáp án"
+        android:textColor="@color/app_accent_mustard"
         android:textSize="14sp"
         android:textStyle="bold" />
 
