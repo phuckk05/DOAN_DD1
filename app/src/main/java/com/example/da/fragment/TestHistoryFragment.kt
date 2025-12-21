@@ -20,10 +20,6 @@ class TestHistoryFragment : Fragment() {
 
     private var testId: Int = -1
     private lateinit var dbHelper: DatabaseHelper
-
-    // ===============================================
-    // BƯỚC 2: THÊM KHAI BÁO CHO SESSION MANAGER
-    // ===============================================
     private lateinit var sessionManager: SessionManager
 
     // Khai báo các View
@@ -32,6 +28,9 @@ class TestHistoryFragment : Fragment() {
     private lateinit var rvTestHistory: RecyclerView
     private lateinit var btnStartTest: Button
     private lateinit var btnViewAllHistory: Button
+
+    // 1. THÊM KHAI BÁO NÚT THI THỬ
+    private lateinit var btnPracticeTest: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,10 +49,6 @@ class TestHistoryFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         dbHelper = DatabaseHelper(requireContext())
-
-        // ===============================================
-        // BƯỚC 3: KHỞI TẠO SESSION MANAGER
-        // ===============================================
         sessionManager = SessionManager(requireContext())
 
         setControl(view)
@@ -66,22 +61,13 @@ class TestHistoryFragment : Fragment() {
         rvTestHistory = view.findViewById(R.id.rvTestHistory)
         btnStartTest = view.findViewById(R.id.btnStartTest)
         btnViewAllHistory = view.findViewById(R.id.btnViewAllHistory)
+
+        // 2. THÊM ÁNH XẠ NÚT THI THỬ
+        btnPracticeTest = view.findViewById(R.id.btnPracticeTest)
     }
 
     private fun setEvent() {
-        // ====================================================================
-        // BƯỚC 4: THÊM LOGIC KIỂM TRA ADMIN VÀO ĐẦU HÀM `setEvent()` (Quan trọng nhất)
-        // ====================================================================
-        if (sessionManager.getUserRole() == "admin") {
-            // Nếu là admin, ẩn nút "Làm bài" đi
-            btnStartTest.visibility = View.GONE
-        } else {
-            // Nếu không phải admin (là user), thì hiện nút đó lên
-            btnStartTest.visibility = View.VISIBLE
-        }
-        // ====================================================================
-        //  Tất cả code còn lại của bạn được giữ nguyên, không thay đổi gì
-        // ====================================================================
+
 
         val test = dbHelper.getTestById(testId)
         tvTestTitle.text = test?.name ?: "Lịch sử làm bài"
@@ -112,6 +98,15 @@ class TestHistoryFragment : Fragment() {
         btnViewAllHistory.setOnClickListener {
             parentFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, HistoryFragment())
+                .addToBackStack(null)
+                .commit()
+        }
+
+        // 3. THÊM SỰ KIỆN CHO NÚT THI THỬ
+        btnPracticeTest.setOnClickListener {
+            val practiceTestFragment = PracticeTestFragment.newInstance(testId)
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, practiceTestFragment)
                 .addToBackStack(null)
                 .commit()
         }

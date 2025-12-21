@@ -56,40 +56,60 @@
         android:layout_above="@+id/bottom_button_container"
         android:padding="8dp" />
 
+    <!-- Container chứa TẤT CẢ các nút điều khiển (Neo ở đáy màn hình) -->
     <LinearLayout
         android:id="@+id/bottom_button_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:background="@color/app_background_cream"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
         android:paddingBottom="16dp"
         android:paddingTop="8dp">
 
+        <!-- 1. Nút Thi thử (Nằm hàng trên cùng) -->
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnViewAllHistory"
+            android:id="@+id/btnPracticeTest"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
             android:textColor="@color/app_title_text_moss"
             app:strokeColor="@color/app_title_text_moss"
-            android:text="Tất cả lịch sử" />
+            android:text="Thi thử (Không lưu lịch sử)" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnStartTest"
-            android:layout_width="0dp"
+        <!-- 2. Hàng chứa 2 nút cũ (Nằm ngang bên dưới) -->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginStart="8dp"
-            android:textColor="@color/app_subtext_dark_brown"
-            app:backgroundTint="@color/app_accent_mustard"
-            android:text="Làm bài" />
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnViewAllHistory"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="8dp"
+                android:textColor="@color/app_title_text_moss"
+                app:strokeColor="@color/app_title_text_moss"
+                android:text="Tất cả lịch sử" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnStartTest"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="8dp"
+                android:textColor="@color/app_subtext_dark_brown"
+                app:backgroundTint="@color/app_accent_mustard"
+                android:text="Làm bài" />
+        </LinearLayout>
 
     </LinearLayout>
+
 
 </RelativeLayout>
 
