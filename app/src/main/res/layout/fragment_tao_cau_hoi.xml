@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/app_background_cream"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Header -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingBottom="16dp">
+
+            <ImageView
+                android:id="@+id/ivBack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_back"
+                android:padding="8dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:contentDescription="@string/back_arrow"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Câu hỏi (Đình Phúc)"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/app_title_text_moss"
+                android:paddingStart="8dp" />
+
+            <TextView
+                android:id="@+id/tvAdd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Thêm"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="@color/app_card_coral"
+                android:padding="8dp"
+                android:clickable="true"
+                android:focusable="true" />
+
+        </LinearLayout>
+
+        <!-- Question Input -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="20dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nhập câu hỏi*"
+                android:textSize="14sp"
+                android:textColor="@color/app_subtext_dark_brown"
+                android:layout_marginBottom="8dp" />
+
+            <EditText
+                android:id="@+id/etQuestion"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:hint="What are you doing ?"
+                android:padding="12dp"
+                android:textSize="14sp"
+                android:background="@drawable/edittext_background"
+                android:textColor="@color/app_subtext_dark_brown"
+                android:textColorHint="@color/app_subtext_dark_brown" />
+
+        </LinearLayout>
+
+        <!-- Subject Selection -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="20dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Chọn môn học"
+                android:textSize="14sp"
+                android:textColor="@color/app_subtext_dark_brown"
+                android:layout_marginBottom="8dp" />
+
+            <Spinner
+                android:id="@+id/spinnerSubject"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:padding="12dp"
+                android:background="@drawable/edittext_background"
+                android:spinnerMode="dropdown" />
+
+        </LinearLayout>
+
+        <!-- Difficulty Level Selection -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="20dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Chọn mức độ"
+                android:textSize="14sp"
+                android:textColor="@color/app_subtext_dark_brown"
+                android:layout_marginBottom="8dp" />
+
+            <Spinner
+                android:id="@+id/spinnerDifficulty"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:padding="12dp"
+                android:background="@drawable/edittext_background"
+                android:spinnerMode="dropdown" />
+
+        </LinearLayout>
+
+        <!-- Multiple Choice Selection -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="20dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Chọn nhiều"
+                android:textSize="14sp"
+                android:textColor="@color/app_subtext_dark_brown"
+                android:layout_marginBottom="8dp" />
+
+            <RadioGroup
+                android:id="@+id/rgMultipleChoice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/rbYes"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:buttonTint="@color/app_card_coral"
+                    android:textColor="@color/app_subtext_dark_brown"
+                    android:text="Có" />
+
+                <RadioButton
+                    android:id="@+id/rbNo"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:checked="true"
+                    android:buttonTint="@color/app_card_coral"
+                    android:textColor="@color/app_subtext_dark_brown"
+                    android:text="Không" />
+
+            </RadioGroup>
+
+        </LinearLayout>
+
+        <!-- Answers Section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="20dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Đáp án"
+                android:textSize="14sp"
+                android:textColor="@color/app_subtext_dark_brown"
+                android:layout_marginBottom="12dp" />
+
+            <LinearLayout
+                android:id="@+id/answersContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="12dp"
+                android:background="@drawable/edittext_background">
+
+                <!-- Add Answer Button -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center">
+
+                    <TextView
+                        android:id="@+id/tvAddAnswer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="⊕ Thêm đáp án"
+                        android:textSize="14sp"
+                        android:textColor="@color/app_accent_mustard"
+                        android:padding="12dp"
+                        android:clickable="true"
+                        android:focusable="true" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

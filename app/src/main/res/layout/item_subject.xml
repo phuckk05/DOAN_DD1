@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@android:color/transparent"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp">
+
+    <!-- Phần nội dung chính của item -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <!-- Tên Môn học -->
+        <TextView
+            android:id="@+id/tvSubjectName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Môn học"
+            android:textSize="16sp"
+            android:textColor="@color/app_subtext_dark_brown"
+            android:textStyle="bold" />
+
+        <!-- Nút Sửa -->
+        <Button
+            android:id="@+id/btnEdit"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/sua"
+            android:textColor="@color/app_title_text_moss"
+            android:textStyle="bold"
+            android:layout_marginEnd="8dp"/>
+
+        <!-- Nút Xóa -->
+        <Button
+            android:id="@+id/btnDelete"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/xoa"
+            android:textColor="@color/app_card_coral"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <!-- Đường kẻ ngăn cách -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="12dp"
+        android:background="@color/app_title_text_moss"
+        android:alpha="0.3"/>
+
+</LinearLayout>

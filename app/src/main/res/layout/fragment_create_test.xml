@@ -1,0 +1,253 @@
+<?xml version="1.0" encoding="utf-8"?><ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/app_background_cream"
+    android:padding="12dp"
+    android:paddingTop="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Header -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingBottom="12dp">
+
+            <ImageView
+                android:id="@+id/ivBack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_back"
+                android:padding="8dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:tint="@color/app_title_text_moss"
+                android:contentDescription="@string/back_arrow"/>
+
+            <TextView
+                android:id="@+id/tvCreateTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Tạo đề (Văn Lực)"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:textColor="@color/app_title_text_moss"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp" />
+
+            <!-- Menu Button -->
+            <ImageView
+                android:id="@+id/btnMenu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_more_vert_24"
+                android:padding="8dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                app:tint="@color/app_title_text_moss" />
+
+        </LinearLayout>
+
+        <!-- Mode indicator and Test name (editable) -->
+        <TextView
+            android:id="@+id/tvMode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/title_tao_de"
+            android:textStyle="bold"
+            android:textColor="@color/app_subtext_dark_brown"
+            android:layout_marginTop="4dp" />
+
+        <EditText
+            android:id="@+id/et_test_name"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="8dp"
+            android:hint="@string/hint_test_name"
+            android:background="@drawable/edittext_background"
+            android:padding="12dp"
+            android:inputType="textCapSentences|text"
+            android:textColor="@color/app_subtext_dark_brown"
+            android:textColorHint="@color/app_subtext_dark_brown"
+            android:importantForAutofill="no" />
+
+        <!-- Form -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/chon_mon_hoc"
+            android:textSize="14sp"
+            android:textColor="@color/app_subtext_dark_brown"
+            android:layout_marginTop="12dp" />
+
+        <Spinner
+            android:id="@+id/spinner_subject"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="8dp"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:background="@drawable/edittext_background" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/chon_muc_do"
+            android:textSize="14sp"
+            android:textColor="@color/app_subtext_dark_brown"
+            android:layout_marginTop="16dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp">
+
+            <CheckBox
+                android:id="@+id/cb_easy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/app_card_coral"
+                android:textColor="@color/app_subtext_dark_brown"
+                android:text="@string/de" />
+
+            <CheckBox
+                android:id="@+id/cb_medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/app_card_coral"
+                android:textColor="@color/app_subtext_dark_brown"
+                android:text="@string/vua"
+                android:layout_marginStart="16dp" />
+
+            <CheckBox
+                android:id="@+id/cb_hard"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/app_card_coral"
+                android:textColor="@color/app_subtext_dark_brown"
+                android:text="@string/kho"
+                android:layout_marginStart="16dp" />
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/nhap_so_cau_label"
+            android:textSize="14sp"
+            android:textColor="@color/app_subtext_dark_brown"
+            android:layout_marginTop="16dp" />
+
+        <EditText
+            android:id="@+id/et_number_questions"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="8dp"
+            android:hint="@string/nhap_so_cau_hint"
+            android:background="@drawable/edittext_background"
+            android:padding="12dp"
+            android:inputType="number"
+            android:textColor="@color/app_subtext_dark_brown"
+            android:textColorHint="@color/app_subtext_dark_brown"
+            android:importantForAutofill="no" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cau_chon_nhieu"
+            android:textSize="14sp"
+            android:textColor="@color/app_subtext_dark_brown"
+            android:layout_marginTop="16dp" />
+
+        <RadioGroup
+            android:id="@+id/rg_multiple_choice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp">
+
+            <RadioButton
+                android:id="@+id/rb_yes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/app_card_coral"
+                android:textColor="@color/app_subtext_dark_brown"
+                android:text="@string/co" />
+
+            <RadioButton
+                android:id="@+id/rb_no"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:buttonTint="@color/app_card_coral"
+                android:textColor="@color/app_subtext_dark_brown"
+                android:text="@string/khong"
+                android:layout_marginStart="12dp" />
+
+        </RadioGroup>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/nhap_so_phut_label"
+            android:textSize="14sp"
+            android:textColor="@color/app_subtext_dark_brown"
+            android:layout_marginTop="16dp" />
+
+        <EditText
+            android:id="@+id/et_minutes"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="8dp"
+            android:hint="@string/nhap_so_phut_hint"
+            android:background="@drawable/edittext_background"
+            android:padding="12dp"
+            android:inputType="number"
+            android:textColor="@color/app_subtext_dark_brown"
+            android:textColorHint="@color/app_subtext_dark_brown"
+            android:importantForAutofill="no" />
+
+        <Button
+            android:id="@+id/btnSave"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:text="Lưu đề thi"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:backgroundTint="@color/app_accent_mustard"
+            android:textColor="@color/app_subtext_dark_brown" />
+
+        <!-- Recycler of existing tests -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/label_test_list"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:textColor="@color/app_title_text_moss"
+            android:layout_marginTop="24dp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvTests"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:nestedScrollingEnabled="false" />
+
+        <!-- Spacer -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="80dp" />
+
+    </LinearLayout>
+
+</ScrollView>
