@@ -24,6 +24,7 @@ class TestHistoryFragment : Fragment() {
     private lateinit var tvTestTitle: TextView
     private lateinit var rvTestHistory: RecyclerView
     private lateinit var btnStartTest: Button
+    private lateinit var btnPracticeTest: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,6 +55,7 @@ class TestHistoryFragment : Fragment() {
         tvTestTitle = view.findViewById(R.id.tvTestTitle)
         rvTestHistory = view.findViewById(R.id.rvTestHistory)
         btnStartTest = view.findViewById(R.id.btnStartTest)
+        btnPracticeTest = view.findViewById(R.id.btnPracticeTest)
     }
 
     // Setup event listeners
@@ -80,6 +82,14 @@ class TestHistoryFragment : Fragment() {
             val doTestFragment = DoTestFragment.newInstance(testId)
             parentFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, doTestFragment)
+                .addToBackStack(null)
+                .commit()
+        }
+
+        btnPracticeTest.setOnClickListener {
+            val practiceTestFragment = PracticeTestFragment.newInstance(testId)
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, practiceTestFragment)
                 .addToBackStack(null)
                 .commit()
         }
