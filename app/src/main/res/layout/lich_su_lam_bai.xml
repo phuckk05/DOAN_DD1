@@ -4,19 +4,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#F3E5F5"
+    android:background="@color/app_background_cream"
     android:padding="16dp"
-    tools:context=".fragment.HistoryFragment"> <TextView
-    android:id="@+id/tvTieuDe"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="LỊCH SỬ LÀM BÀI"
-    android:textColor="#4A148C"
-    android:textSize="24sp"
-    android:textStyle="bold"
-    android:layout_marginBottom="16dp"
-    android:layout_gravity="center_horizontal" />
+    tools:context=".fragment.HistoryFragment">
 
+    <!-- TIÊU ĐỀ MÀN HÌNH -->
+    <TextView
+        android:id="@+id/tvTieuDe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="LỊCH SỬ LÀM BÀI (Minh Quân)"
+        android:textColor="@color/app_title_text_moss"
+        android:textSize="23sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="16dp"
+        android:layout_gravity="center_horizontal" />
+
+    <!-- THANH TÌM KIẾM -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -28,13 +32,14 @@
             android:id="@+id/etSearchTenDe"
             android:layout_width="0dp"
             android:layout_weight="1"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:hint="Tìm kiếm Tên đề..."
-            android:textSize="14sp"
             android:inputType="text"
-            android:backgroundTint="#9C27B0"
-            android:paddingStart="12dp"
-            android:paddingEnd="12dp"/>
+            android:background="@drawable/edittext_background"
+            android:textColor="@color/app_subtext_dark_brown"
+            android:textColorHint="@color/app_subtext_dark_brown"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp" />
 
         <Button
             android:id="@+id/btnSearchTenDe"
@@ -42,25 +47,26 @@
             android:layout_height="wrap_content"
             android:text="Tìm"
             android:textStyle="bold"
-            android:backgroundTint="#673AB7"
-            android:textColor="#FFFFFF"
+            android:backgroundTint="@color/app_accent_mustard"
+            android:textColor="@color/app_subtext_dark_brown"
             android:layout_marginStart="8dp"/>
     </LinearLayout>
 
+    <!-- BỘ LỌC -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:background="#E1BEE7"
+        android:background="@drawable/edittext_background"
         android:padding="8dp"
         android:layout_marginBottom="8dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Loại lọc:"
-            android:textColor="#673AB7"
+            android:text="Lọc:"
+            android:textColor="@color/app_title_text_moss"
             android:textSize="14sp"
             android:layout_marginEnd="6dp" />
 
@@ -70,14 +76,13 @@
             android:layout_weight="1.5"
             android:layout_height="wrap_content"
             android:layout_marginEnd="12dp"
-            android:backgroundTint="#9C27B0"
-            android:popupBackground="#E1BEE7" />
+            android:backgroundTint="@color/app_title_text_moss" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Giá trị:"
-            android:textColor="#673AB7"
+            android:textColor="@color/app_title_text_moss"
             android:textSize="14sp"
             android:layout_marginEnd="6dp" />
 
@@ -86,33 +91,23 @@
             android:layout_width="0dp"
             android:layout_weight="2"
             android:layout_height="wrap_content"
-            android:backgroundTint="#9C27B0"
-            android:popupBackground="#E1BEE7"/>
+            android:backgroundTint="@color/app_title_text_moss"/>
     </LinearLayout>
 
-
+    <!-- TIÊU ĐỀ CỦA BẢNG DỮ LIỆU -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#673AB7"
-        android:padding="8dp">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:text="ID"
-            android:textColor="#FFFFFF"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:textSize="12sp" />
+        android:background="@color/app_title_text_moss"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp">
 
         <TextView
             android:layout_width="0dp"
             android:layout_weight="1.5"
             android:layout_height="wrap_content"
             android:text="Môn học"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/app_background_cream"
             android:textStyle="bold"
             android:gravity="center"
             android:textSize="12sp" />
@@ -123,7 +118,7 @@
             android:layout_weight="2.5"
             android:layout_height="wrap_content"
             android:text="Tên đề"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/app_background_cream"
             android:textStyle="bold"
             android:gravity="center"
             android:textSize="12sp" />
@@ -133,17 +128,7 @@
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:text="Điểm"
-            android:textColor="#FFFFFF"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:textSize="12sp" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_weight="1.5"
-            android:layout_height="wrap_content"
-            android:text="T.Gian"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/app_background_cream"
             android:textStyle="bold"
             android:gravity="center"
             android:textSize="12sp" />
@@ -153,38 +138,29 @@
             android:layout_weight="2"
             android:layout_height="wrap_content"
             android:text="Ngày làm"
-            android:textColor="#FFFFFF"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:textSize="12sp" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_weight="1.5"
-            android:layout_height="wrap_content"
-            android:text="Mức độ"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/app_background_cream"
             android:textStyle="bold"
             android:gravity="center"
             android:textSize="12sp" />
     </LinearLayout>
 
+    <!-- DANH SÁCH LỊCH SỬ -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:padding="4dp"
-        android:background="#F3E5F5" />
+        tools:listitem="@layout/item_history" />
 
+    <!-- NÚT TRỞ VỀ -->
     <Button
         android:id="@+id/btnTroVeTrangChu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Trở về trang chủ"
         android:textStyle="bold"
-        android:backgroundTint="#9C27B0"
-        android:textColor="#FFFFFF"
+        android:backgroundTint="@color/app_card_coral"
+        android:textColor="@color/app_subtext_dark_brown"
         android:layout_marginTop="16dp" />
 
 </LinearLayout>

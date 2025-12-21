@@ -11,6 +11,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.da.R
+import com.example.da.SessionManager
 import com.example.da.activity.MainActivity
 import com.example.da.adapter.TestHistoryAdapter
 import com.example.da.database.DatabaseHelper
@@ -19,6 +20,11 @@ class TestHistoryFragment : Fragment() {
 
     private var testId: Int = -1
     private lateinit var dbHelper: DatabaseHelper
+
+    // ===============================================
+    // BƯỚC 2: THÊM KHAI BÁO CHO SESSION MANAGER
+    // ===============================================
+    private lateinit var sessionManager: SessionManager
 
     // Khai báo các View
     private lateinit var ivBack: ImageView
@@ -29,7 +35,6 @@ class TestHistoryFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // Lấy testId từ arguments
         arguments?.let {
             testId = it.getInt("testId", -1)
         }
@@ -39,7 +44,6 @@ class TestHistoryFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_test_history, container, false)
     }
 
@@ -47,11 +51,15 @@ class TestHistoryFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         dbHelper = DatabaseHelper(requireContext())
 
+        // ===============================================
+        // BƯỚC 3: KHỞI TẠO SESSION MANAGER
+        // ===============================================
+        sessionManager = SessionManager(requireContext())
+
         setControl(view)
         setEvent()
     }
 
-    // Ánh xạ các View từ layout
     private fun setControl(view: View) {
         ivBack = view.findViewById(R.id.ivBack)
         tvTestTitle = view.findViewById(R.id.tvTestTitle)
@@ -60,20 +68,27 @@ class TestHistoryFragment : Fragment() {
         btnViewAllHistory = view.findViewById(R.id.btnViewAllHistory)
     }
 
-    // Cài đặt các trình xử lý sự kiện
     private fun setEvent() {
-        // Lấy thông tin đề thi và hiển thị tiêu đề
+        // ====================================================================
+        // BƯỚC 4: THÊM LOGIC KIỂM TRA ADMIN VÀO ĐẦU HÀM `setEvent()` (Quan trọng nhất)
+        // ====================================================================
+        if (sessionManager.getUserRole() == "admin") {
+            // Nếu là admin, ẩn nút "Làm bài" đi
+            btnStartTest.visibility = View.GONE
+        } else {
+            // Nếu không phải admin (là user), thì hiện nút đó lên
+            btnStartTest.visibility = View.VISIBLE
+        }
+        // ====================================================================
+        //  Tất cả code còn lại của bạn được giữ nguyên, không thay đổi gì
+        // ====================================================================
+
         val test = dbHelper.getTestById(testId)
         tvTestTitle.text = test?.name ?: "Lịch sử làm bài"
 
-        // Lấy kết quả thi của đề này và hiển thị lên RecyclerView
         val testResults = dbHelper.getTestResults(testId)
         val adapter = TestHistoryAdapter(testResults) { result ->
-            // =======================================================
-            //  SỬA LỖI Ở ĐÂY: ĐỔI `result.resultId` THÀNH `result.id`
-            // =======================================================
-            val viewAnswersFragment = ViewAnswersFragment.newInstance(result.id) // <-- ĐÃ SỬA
-
+            val viewAnswersFragment = ViewAnswersFragment.newInstance(result.id)
             parentFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, viewAnswersFragment)
                 .addToBackStack(null)
@@ -82,12 +97,10 @@ class TestHistoryFragment : Fragment() {
         rvTestHistory.adapter = adapter
         rvTestHistory.layoutManager = LinearLayoutManager(context)
 
-        // Sự kiện cho nút quay lại
         ivBack.setOnClickListener {
             parentFragmentManager.popBackStack()
         }
 
-        // Sự kiện cho nút Làm bài
         btnStartTest.setOnClickListener {
             val doTestFragment = DoTestFragment.newInstance(testId)
             parentFragmentManager.beginTransaction()
@@ -96,25 +109,21 @@ class TestHistoryFragment : Fragment() {
                 .commit()
         }
 
-        // Sự kiện cho nút "TẤT CẢ LỊCH SỬ"
         btnViewAllHistory.setOnClickListener {
-            // Chuyển sang màn hình HistoryFragment để xem toàn bộ lịch sử
             parentFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, HistoryFragment())
-                .addToBackStack(null) // Cho phép người dùng nhấn back để quay lại
+                .addToBackStack(null)
                 .commit()
         }
     }
 
     override fun onResume() {
         super.onResume()
-        // Ẩn thanh điều hướng dưới cùng khi vào màn hình này
         (activity as? MainActivity)?.showBottomNavigation(false)
     }
 
     override fun onPause() {
         super.onPause()
-        // Hiện lại thanh điều hướng dưới cùng khi rời khỏi màn hình này
         (activity as? MainActivity)?.showBottomNavigation(true)
     }
 

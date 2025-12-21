@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/app_background_cream"
     android:padding="16dp"
     tools:context=".fragment.SubjectManagementFragment">
 
+    <!-- Nút Quay Lại -->
     <ImageButton
         android:id="@+id/btnBack"
         android:layout_width="48dp"
@@ -14,8 +17,10 @@
         android:background="?attr/selectableItemBackgroundBorderless"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
+        app:tint="@color/app_title_text_moss"
         android:contentDescription="Back" />
 
+    <!-- Tiêu đề -->
     <TextView
         android:id="@+id/tvTitle"
         android:layout_width="wrap_content"
@@ -24,11 +29,13 @@
         android:layout_alignTop="@id/btnBack"
         android:layout_alignBottom="@id/btnBack"
         android:gravity="center_vertical"
-        android:text="Quản lý Môn học"
-        android:textSize="24sp"
+        android:text="Quản lý Môn học (Đình Phúc)"
+        android:textSize="20sp"
         android:textStyle="bold"
-        android:layout_marginStart="16dp"/>
+        android:textColor="@color/app_title_text_moss"
+        android:layout_marginStart="8dp"/>
 
+    <!-- Danh sách các môn học -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvSubjects"
         android:layout_width="match_parent"
@@ -36,13 +43,22 @@
         android:layout_below="@id/tvTitle"
         android:layout_above="@+id/btnAddSubject"
         android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"/>
+        android:layout_marginBottom="16dp"
+        android:clipToPadding="false"/>
 
+    <!-- Nút Thêm Môn Học Mới -->
     <Button
         android:id="@+id/btnAddSubject"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Thêm Môn học mới"
-        android:layout_alignParentBottom="true"/>
+        android:layout_alignParentBottom="true"
+        android:backgroundTint="@color/app_accent_mustard"
+        android:textColor="@color/app_subtext_dark_brown"
+        android:textStyle="bold"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp"
+        app:cornerRadius="12dp"/>
 
 </RelativeLayout>
+

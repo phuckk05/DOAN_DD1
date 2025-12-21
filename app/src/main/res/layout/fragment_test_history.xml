@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/app_background_cream"
     tools:context=".fragment.TestHistoryFragment">
 
     <!-- Thanh tiêu đề -->
@@ -27,7 +29,20 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="Lịch sử làm bài"
+            android:layout_toEndOf="@+id/ivBack"
+            android:gravity="center"
+            android:text=" Lịch sử làm bài "
+            android:textColor="@color/app_title_text_moss"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_toEndOf="@+id/ivBack"
+            android:gravity="center"
+            android:text="\n \nMinh Vũ"
+            android:textColor="@color/app_title_text_moss"
             android:textSize="20sp"
             android:textStyle="bold" />
     </RelativeLayout>
@@ -41,45 +56,40 @@
         android:layout_above="@+id/bottom_button_container"
         android:padding="8dp" />
 
-    <!--
-    =======================================================
-    THÊM KHUNG BỌC CHO CÁC NÚT Ở DƯỚI
-    =======================================================
-    -->
     <LinearLayout
         android:id="@+id/bottom_button_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:orientation="horizontal"
+        android:background="@color/app_background_cream"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"
         android:paddingBottom="16dp"
         android:paddingTop="8dp">
 
-        <!--
-        =======================================================
-        NÚT XEM TẤT CẢ LỊCH SỬ (THÊM MỚI)
-        =======================================================
-        -->
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btnViewAllHistory"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginEnd="8dp"
+            android:textColor="@color/app_title_text_moss"
+            app:strokeColor="@color/app_title_text_moss"
             android:text="Tất cả lịch sử" />
 
-        <!-- Nút Làm bài (giữ nguyên) -->
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btnStartTest"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginStart="8dp"
+            android:textColor="@color/app_subtext_dark_brown"
+            app:backgroundTint="@color/app_accent_mustard"
             android:text="Làm bài" />
 
     </LinearLayout>
 
 </RelativeLayout>
+

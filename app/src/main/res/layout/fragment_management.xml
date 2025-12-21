@@ -5,25 +5,29 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/background_light"
+    android:background="@color/app_background_cream"
     tools:context=".fragment.ManagementFragment">
 
+    <!-- Thanh tiêu đề (Toolbar) -->
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
-        app:elevation="4dp">
+        android:background="@color/app_background_cream"
+        app:elevation="0dp">
+
         <androidx.appcompat.widget.Toolbar
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Quản lý"
-                android:textColor="@color/text_primary"
+                android:text="Quản lý (Đình phúc)"
+                android:textColor="@color/app_title_text_moss"
                 android:textSize="22sp"
                 android:textStyle="bold"
                 android:layout_gravity="start" />
+
             <ImageView
                 android:id="@+id/btnMenu"
                 android:layout_width="wrap_content"
@@ -32,25 +36,28 @@
                 android:padding="8dp"
                 android:layout_gravity="end"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                app:tint="@color/text_primary" />
+                app:tint="@color/app_title_text_moss" />
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
+    <!-- Tiêu đề phụ -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         android:layout_marginBottom="8dp"
         android:text="Danh sách câu hỏi"
-        android:textColor="@color/text_primary"
+        android:textColor="@color/app_title_text_moss"
         android:textSize="18sp"
         android:textStyle="bold" />
 
+    <!-- Thanh Tab chọn môn học -->
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:scrollbars="none">
+
         <LinearLayout
             android:id="@+id/tabContainer"
             android:layout_width="wrap_content"
@@ -62,6 +69,7 @@
             android:paddingBottom="8dp" />
     </HorizontalScrollView>
 
+    <!-- Danh sách câu hỏi -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvQuestions"
         android:layout_width="match_parent"

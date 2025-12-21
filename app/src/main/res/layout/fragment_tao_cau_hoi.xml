@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF"
+    android:background="@color/app_background_cream"
     android:padding="16dp">
 
     <LinearLayout
@@ -33,10 +33,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Câu hỏi"
+                android:text="Câu hỏi (Đình Phúc)"
                 android:textSize="18sp"
                 android:textStyle="bold"
-                android:textColor="#000000"
+                android:textColor="@color/app_title_text_moss"
                 android:paddingStart="8dp" />
 
             <TextView
@@ -45,7 +45,8 @@
                 android:layout_height="wrap_content"
                 android:text="Thêm"
                 android:textSize="14sp"
-                android:textColor="#0066CC"
+                android:textStyle="bold"
+                android:textColor="@color/app_card_coral"
                 android:padding="8dp"
                 android:clickable="true"
                 android:focusable="true" />
@@ -64,7 +65,7 @@
                 android:layout_height="wrap_content"
                 android:text="Nhập câu hỏi*"
                 android:textSize="14sp"
-                android:textColor="#000000"
+                android:textColor="@color/app_subtext_dark_brown"
                 android:layout_marginBottom="8dp" />
 
             <EditText
@@ -74,9 +75,9 @@
                 android:hint="What are you doing ?"
                 android:padding="12dp"
                 android:textSize="14sp"
-                android:background="@drawable/card_outline_bg"
-                android:textColor="#000000"
-                android:textColorHint="#999999" />
+                android:background="@drawable/edittext_background"
+                android:textColor="@color/app_subtext_dark_brown"
+                android:textColorHint="@color/app_subtext_dark_brown" />
 
         </LinearLayout>
 
@@ -92,7 +93,7 @@
                 android:layout_height="wrap_content"
                 android:text="Chọn môn học"
                 android:textSize="14sp"
-                android:textColor="#000000"
+                android:textColor="@color/app_subtext_dark_brown"
                 android:layout_marginBottom="8dp" />
 
             <Spinner
@@ -100,7 +101,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:padding="12dp"
-                android:background="@drawable/card_outline_bg"
+                android:background="@drawable/edittext_background"
                 android:spinnerMode="dropdown" />
 
         </LinearLayout>
@@ -117,7 +118,7 @@
                 android:layout_height="wrap_content"
                 android:text="Chọn mức độ"
                 android:textSize="14sp"
-                android:textColor="#000000"
+                android:textColor="@color/app_subtext_dark_brown"
                 android:layout_marginBottom="8dp" />
 
             <Spinner
@@ -125,7 +126,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:padding="12dp"
-                android:background="@drawable/card_outline_bg"
+                android:background="@drawable/edittext_background"
                 android:spinnerMode="dropdown" />
 
         </LinearLayout>
@@ -142,7 +143,7 @@
                 android:layout_height="wrap_content"
                 android:text="Chọn nhiều"
                 android:textSize="14sp"
-                android:textColor="#000000"
+                android:textColor="@color/app_subtext_dark_brown"
                 android:layout_marginBottom="8dp" />
 
             <RadioGroup
@@ -156,6 +157,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:buttonTint="@color/app_card_coral"
+                    android:textColor="@color/app_subtext_dark_brown"
                     android:text="Có" />
 
                 <RadioButton
@@ -164,8 +167,9 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:checked="true"
+                    android:buttonTint="@color/app_card_coral"
+                    android:textColor="@color/app_subtext_dark_brown"
                     android:text="Không" />
-
 
             </RadioGroup>
 
@@ -183,7 +187,7 @@
                 android:layout_height="wrap_content"
                 android:text="Đáp án"
                 android:textSize="14sp"
-                android:textColor="#000000"
+                android:textColor="@color/app_subtext_dark_brown"
                 android:layout_marginBottom="12dp" />
 
             <LinearLayout
@@ -192,8 +196,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:padding="12dp"
-                android:background="@drawable/card_outline_bg">
-
+                android:background="@drawable/edittext_background">
 
                 <!-- Add Answer Button -->
                 <LinearLayout
@@ -208,7 +211,7 @@
                         android:layout_height="wrap_content"
                         android:text="⊕ Thêm đáp án"
                         android:textSize="14sp"
-                        android:textColor="#0066CC"
+                        android:textColor="@color/app_accent_mustard"
                         android:padding="12dp"
                         android:clickable="true"
                         android:focusable="true" />
@@ -216,9 +219,6 @@
                 </LinearLayout>
 
             </LinearLayout>
-
         </LinearLayout>
-
     </LinearLayout>
-
 </ScrollView>

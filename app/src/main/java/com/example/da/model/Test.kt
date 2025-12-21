@@ -4,7 +4,7 @@ data class Test(
     val testId: Int = 0,
     val subjectId: Int,
     val name: String,
-    val numQuestions: Int,
+    val numQuestions: Int, // <-- Thuộc tính này sẽ được dùng
     val durationMinutes: Int,
     val allowMultipleAnswers: Boolean,
     val easyPercent: Int,

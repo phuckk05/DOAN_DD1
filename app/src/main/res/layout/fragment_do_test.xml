@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F7FA"
+    android:background="@color/app_background_cream"
     tools:context=".fragment.DoTestFragment">
 
     <!-- Header -->
@@ -21,24 +21,42 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize">
 
+            <!-- Nút Back (Bên trái) -->
             <ImageView
                 android:id="@+id/ivBack"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_back"
+                android:layout_gravity="start|center_vertical"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:clickable="true"
+                android:focusable="true"
                 android:padding="8dp"
-                android:layout_gravity="start|center_vertical"/>
+                android:src="@drawable/ic_back"
+                app:tint="@color/app_title_text_moss" />
 
+            <!-- ===== TIÊU ĐỀ ĐÃ ĐƯỢC THAY ĐỔI CỐ ĐỊNH ===== -->
+            <TextView
+                android:id="@+id/tvTestTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="Kiểm tra (Minh Vũ)"
+                android:textColor="@color/app_title_text_moss"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <!-- Đồng hồ (Bên phải) -->
             <TextView
                 android:id="@+id/tvTimer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end|center_vertical"
                 android:layout_marginEnd="16dp"
-                android:textColor="#FF5722"
+                android:textColor="@color/app_card_coral"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 tools:text="14:59" />
+
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -49,7 +67,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:textColor="@color/black"
+        android:textColor="@color/app_title_text_moss"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
@@ -63,7 +81,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
-        android:progressTint="#3D4AFA"
+        android:progressTint="@color/app_accent_mustard"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@id/tvQuestionNumber"
         app:layout_constraintTop_toBottomOf="@id/tvQuestionNumber"
@@ -75,18 +93,21 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
+        app:cardBackgroundColor="@color/white"
         app:cardCornerRadius="12dp"
-        app:cardElevation="4dp"
+        app:cardElevation="2dp"
         app:layout_constraintEnd_toEndOf="@id/progressBar"
         app:layout_constraintStart_toStartOf="@id/progressBar"
-        app:layout_constraintTop_toBottomOf="@id/progressBar">
+        app:layout_constraintTop_toBottomOf="@id/progressBar"
+        app:strokeColor="#DDD"
+        app:strokeWidth="1dp">
 
         <TextView
             android:id="@+id/tvQuestionText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="16dp"
-            android:textColor="@color/black"
+            android:textColor="@color/app_subtext_dark_brown"
             android:textSize="18sp"
             tools:text="Đây là nội dung của câu hỏi. Câu hỏi có thể khá dài và chiếm nhiều dòng?" />
     </com.google.android.material.card.MaterialCardView>
@@ -100,7 +121,7 @@
         app:layout_constraintEnd_toEndOf="@id/questionCard"
         app:layout_constraintStart_toStartOf="@id/questionCard"
         app:layout_constraintTop_toBottomOf="@id/questionCard">
-        <!-- RadioButtons for answers will be added dynamically -->
+        <!-- RadioButtons cho các đáp án sẽ được thêm vào đây bằng code. -->
     </RadioGroup>
 
 
@@ -109,34 +130,43 @@
         android:id="@+id/navigationLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:orientation="horizontal"
         android:paddingTop="16dp"
         android:paddingBottom="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:gravity="center">
+        app:layout_constraintStart_toStartOf="parent">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnPrevious"
             style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="1"
             android:text="Câu trước"
-            android:textAllCaps="false"
-            app:cornerRadius="8dp" />
+            android:textColor="@color/app_title_text_moss"
+            android:textStyle="bold"
+            app:cornerRadius="12dp"
+            app:strokeColor="@color/app_title_text_moss" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnNext"
             style="@style/Widget.MaterialComponents.Button"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="16dp"
+            android:layout_weight="1"
             android:text="Câu tiếp"
-            android:textAllCaps="false"
-            app:backgroundTint="#3D4AFA"
-            app:cornerRadius="8dp" />
+            android:textColor="@color/app_subtext_dark_brown"
+            android:textStyle="bold"
+            app:backgroundTint="@color/app_accent_mustard"
+            app:cornerRadius="12dp" />
 
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+

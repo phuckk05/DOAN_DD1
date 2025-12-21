@@ -31,12 +31,17 @@ class TestAdapter(
     }
 
     inner class TestViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        // Ánh xạ tất cả các TextView cần thiết
         private val tvTestName: TextView = itemView.findViewById(R.id.tvTestName)
+        private val tvQuestionCount: TextView = itemView.findViewById(R.id.tvQuestionCount) // <-- Ánh xạ TextView số câu
         private val tvDuration: TextView = itemView.findViewById(R.id.tvDuration)
 
         fun bind(test: Test) {
             tvTestName.text = test.name
-            tvDuration.text = "Thời gian: ${test.durationMinutes} phút"
+
+            tvQuestionCount.text = "${test.numQuestions} câu"
+
+            tvDuration.text = "${test.durationMinutes} Phút"
         }
     }
 }

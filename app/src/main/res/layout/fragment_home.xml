@@ -1,27 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/app_background_cream"
     tools:context=".fragment.HomeFragment">
 
-    <!-- TIÊU ĐỀ -->
     <TextView
         android:id="@+id/tvTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:text="Danh sách đề thi"
-        android:textSize="24sp"
+        android:text="Danh sách đề thi (Văn Lực)"
+        android:textSize="20sp"
         android:textStyle="bold"
+        android:textColor="@color/app_title_text_moss"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- ======================================================= -->
-    <!-- NÚT ĐĂNG XUẤT - SẼ LUÔN HIỂN THỊ CHO CẢ USER VÀ ADMIN     -->
-    <!-- ======================================================= -->
     <Button
         android:id="@+id/btnLogout"
         style="@style/Widget.MaterialComponents.Button.TextButton"
@@ -29,10 +27,12 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:text="Đăng xuất"
+        android:textColor="@color/app_accent_mustard"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@id/tvTitle"
+        app:layout_constraintBottom_toBottomOf="@id/tvTitle" />
 
-    <!-- DANH SÁCH ĐỀ THI -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvTestList"
         android:layout_width="0dp"
@@ -44,7 +44,6 @@
         app:layout_constraintTop_toBottomOf="@+id/tvTitle"
         tools:listitem="@layout/item_test" />
 
-    <!-- CONTAINER CHO CÁC NÚT Ở DƯỚI -->
     <LinearLayout
         android:id="@+id/bottom_button_container"
         android:layout_width="0dp"
@@ -57,24 +56,31 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <!-- NÚT XEM LỊCH SỬ - LUÔN HIỂN THỊ -->
         <Button
             android:id="@+id/btnHistory"
-            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
             android:layout_weight="1"
-            android:text="Lịch sử" />
+            android:text="Lịch sử"
+            android:backgroundTint="@color/app_accent_mustard"
+            android:textColor="@color/app_subtext_dark_brown"
+            android:textStyle="bold"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"/>
 
-        <!-- NÚT TẠO ĐỀ THI - CHỈ ADMIN MỚI THẤY -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnCreateTest"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_weight="1"
-            android:text="Tạo đề thi"/>
+            android:text="Tạo đề thi"
+            android:backgroundTint="@color/app_card_coral"
+            android:textColor="@color/app_subtext_dark_brown"
+            android:textStyle="bold"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"/>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

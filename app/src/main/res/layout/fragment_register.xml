@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    android:background="@color/primary">
+    android:background="@color/app_background_cream">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,40 +15,49 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Tạo tài khoản"
-            android:textColor="@color/white"
-            android:textSize="32sp"
+            android:text="Tạo tài khoản \n   Minh Quân"
+            android:textColor="@color/app_title_text_moss"
+            android:textSize="25sp"
             android:textStyle="bold"
             android:layout_marginBottom="48dp"/>
 
         <EditText
             android:id="@+id/etUsername"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:hint="Tên đăng nhập"
             android:inputType="text"
-            android:background="@drawable/shape_edittext_background"
-            android:padding="16dp"
+            android:background="@drawable/edittext_background"
+            android:textColor="@color/app_subtext_dark_brown"
+            android:textColorHint="@color/app_subtext_dark_brown"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
             android:layout_marginBottom="16dp"/>
 
         <EditText
             android:id="@+id/etPassword"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:hint="Mật khẩu"
             android:inputType="textPassword"
-            android:background="@drawable/shape_edittext_background"
-            android:padding="16dp"
+            android:background="@drawable/edittext_background"
+            android:textColor="@color/app_subtext_dark_brown"
+            android:textColorHint="@color/app_subtext_dark_brown"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
             android:layout_marginBottom="16dp"/>
 
         <EditText
             android:id="@+id/etConfirmPassword"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
             android:hint="Nhập lại mật khẩu"
             android:inputType="textPassword"
-            android:background="@drawable/shape_edittext_background"
-            android:padding="16dp"
+            android:background="@drawable/edittext_background"
+            android:textColor="@color/app_subtext_dark_brown"
+            android:textColorHint="@color/app_subtext_dark_brown"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
             android:layout_marginBottom="24dp"/>
 
         <Button
@@ -56,9 +65,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Đăng ký"
-            android:background="@drawable/shape_button_secondary"
-            android:textColor="@color/primary"
-            android:padding="16dp"
+            android:backgroundTint="@color/app_card_coral"
+            android:textColor="@color/app_subtext_dark_brown"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
             android:textStyle="bold"/>
 
         <TextView
@@ -66,7 +76,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Đã có tài khoản? Đăng nhập"
-            android:textColor="@color/white"
+            android:textColor="@color/app_accent_mustard"
+            android:textStyle="bold"
             android:padding="16dp"/>
     </LinearLayout>
 </ScrollView>

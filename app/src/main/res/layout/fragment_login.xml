@@ -1,50 +1,185 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center"
-    android:padding="24dp"
+    android:background="@color/app_background_cream"
     tools:context=".fragment.LoginFragment">
 
+    <!-- Phần trang trí (Nửa trên màn hình) -->
+    <LinearLayout
+        android:id="@+id/header_section"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@color/app_title_text_moss"
+        android:gravity="center"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.4"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/s1"
+            android:scaleType="centerCrop"
+            android:alpha="0.3"
+            android:contentDescription="Decorative background" />
+
+    </LinearLayout>
+
+    <!-- ===== CỤM TIÊU ĐỀ ĐÃ ĐƯỢC THIẾT KẾ LẠI ===== -->
+    <!-- Đường kẻ trang trí -->
+    <View
+        android:id="@+id/title_decorator"
+        android:layout_width="4dp"
+        android:layout_height="50dp"
+        android:background="@color/app_accent_mustard"
+        android:layout_marginStart="24dp"
+        android:layout_marginBottom="24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/login_card" />
+
+    <!-- Tiêu đề chính -->
     <TextView
+        android:id="@+id/tvAppTitleMain"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Đăng Nhập"
-        android:textSize="32sp"
+        android:text="Quản lý câu hỏi"
+        android:textColor="@android:color/white"
+        android:textSize="26sp"
         android:textStyle="bold"
-        android:layout_marginBottom="32dp"/>
+        android:layout_marginStart="12dp"
+        app:layout_constraintStart_toEndOf="@id/title_decorator"
+        app:layout_constraintTop_toTopOf="@id/title_decorator" />
 
-    <EditText
-        android:id="@+id/etUsername"
+    <!-- Tiêu đề phụ -->
+    <TextView
+        android:id="@+id/tvAppTitleSub"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TRẮC NGHIỆM"
+        android:textColor="@color/app_accent_mustard"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:letterSpacing="0.1"
+        app:layout_constraintStart_toStartOf="@id/tvAppTitleMain"
+        app:layout_constraintTop_toBottomOf="@id/tvAppTitleMain" />
+    <!-- ============================================== -->
+
+    <!-- Card chứa form đăng nhập -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/login_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Tên đăng nhập"
-        android:inputType="text"
-        android:maxLines="1"
-        android:layout_marginBottom="16dp"/>
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="8dp"
+        app:layout_constraintBottom_toBottomOf="@+id/header_section"
+        app:layout_constraintTop_toBottomOf="@+id/header_section">
 
-    <EditText
-        android:id="@+id/etPassword"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Mật khẩu"
-        android:inputType="textPassword"
-        android:maxLines="1"
-        android:layout_marginBottom="24dp"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="24dp">
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="24dp"
+                android:text="Đăng Nhập"
+                android:textColor="@color/app_title_text_moss"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="10dp"
+                android:text="Nhóm 3 Minh Quân"
+                android:textColor="@color/app_title_text_moss"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <!-- Ô nhập Tên đăng nhập -->
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Tên đăng nhập"
+                app:boxStrokeColor="@color/app_title_text_moss"
+                app:hintTextColor="@color/app_title_text_moss">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etUsername"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:textColor="@color/app_subtext_dark_brown" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Ô nhập Mật khẩu -->
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:hint="Mật khẩu"
+                app:boxStrokeColor="@color/app_title_text_moss"
+                app:endIconMode="password_toggle"
+                app:endIconTint="@color/app_title_text_moss"
+                app:hintTextColor="@color/app_title_text_moss">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPassword"
+                    android:maxLines="1"
+                    android:textColor="@color/app_subtext_dark_brown" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <!-- Nút Đăng nhập -->
     <Button
         android:id="@+id/btnLogin"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Đăng nhập"/>
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="24dp"
+        android:backgroundTint="@color/app_card_coral"
+        android:paddingTop="14dp"
+        android:paddingBottom="14dp"
+        android:text="Đăng Nhập"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:cornerRadius="25dp"
+        app:layout_constraintBottom_toTopOf="@id/tvGoToRegister"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
+    <!-- Link Đăng ký -->
     <TextView
         android:id="@+id/tvGoToRegister"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
         android:text="Chưa có tài khoản? Đăng ký ngay!"
-        android:padding="16dp"/>
+        android:textColor="@color/app_accent_mustard"
+        android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
