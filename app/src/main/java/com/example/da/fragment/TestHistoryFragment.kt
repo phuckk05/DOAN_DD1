@@ -82,17 +82,13 @@ class TestHistoryFragment : Fragment() {
 
         tvTestTitle.text = test.name
 
-        if (sessionManager.getUserRole() == "admin") {
-            btnStartTest.visibility = View.GONE
-            btnPracticeTest.visibility = View.GONE
-        } else {
+
             btnStartTest.visibility = View.VISIBLE
             btnPracticeTest.visibility = View.VISIBLE
-        }
+
 
         val testResults = dbHelper.getTestResults(testId)
         val adapter = TestHistoryAdapter(testResults) { result ->
-            // ĐẢM BẢO TRUYỀN ĐÚNG result.id (là resultId)
             val viewAnswersFragment = ViewAnswersFragment.newInstance(result.id)
             parentFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, viewAnswersFragment)
