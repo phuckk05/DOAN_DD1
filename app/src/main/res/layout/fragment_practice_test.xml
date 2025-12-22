@@ -104,7 +104,7 @@
         app:layout_constraintEnd_toEndOf="@id/questionCard"
         app:layout_constraintStart_toStartOf="@id/questionCard"
         app:layout_constraintTop_toBottomOf="@id/questionCard">
-        <!-- RadioButtons for answers will be added dynamically -->
+        <!-- RadioButtons/CheckBoxes for answers will be added dynamically -->
     </RadioGroup>
 
     <!-- Show Answer Button -->

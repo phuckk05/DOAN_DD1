@@ -335,7 +335,6 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
             put(COLUMN_ROLE, role)
         }
         val id = db.insert(TABLE_USERS, null, values)
-        db.close()
         return id
     }
 
@@ -360,9 +359,10 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
             result = Pair(role, userId)
         }
         cursor.close()
-        db.close()
         return result
+
     }
+
 
     /**
      * Kiểm tra xem một tên đăng nhập đã tồn tại trong cơ sở dữ liệu hay chưa.
@@ -374,9 +374,9 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         val cursor = db.rawQuery("SELECT 1 FROM $TABLE_USERS WHERE $COLUMN_USERNAME = ?", arrayOf(username))
         val exists = cursor.count > 0
         cursor.close()
-        db.close()
         return exists
     }
+
     // --- LOGIC LỌC KHÁC (Hàm phụ trợ) ---
 
     private fun isScoreInRange(diemString: String, range: String): Boolean {
@@ -884,6 +884,26 @@ class DatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME
         }
         cursor.close()
         return questions
+    }
+    // --- HÀM THÊM MỚI ĐỂ XEM LẠI ĐÁP ÁN ---
+
+    @SuppressLint("Range")
+    fun getTestResultById(resultId: Int): TestResult? {
+        val db = readableDatabase
+        val cursor = db.rawQuery("SELECT * FROM $TABLE_TEST_RESULTS WHERE $COLUMN_RESULT_ID = ?", arrayOf(resultId.toString()))
+        var testResult: TestResult? = null
+        if (cursor.moveToFirst()) {
+            testResult = TestResult(
+                id = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_RESULT_ID)),
+                testId = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_RESULT_TEST_ID)),
+                score = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_SCORE)),
+                timeTakenSeconds = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_TIME_TAKEN_SECONDS)),
+                timestamp = cursor.getLong(cursor.getColumnIndexOrThrow(COLUMN_RESULT_CREATED_AT))
+            )
+        }
+        cursor.close()
+        // Quan trọng: Không có db.close() ở đây
+        return testResult
     }
 
     @SuppressLint("Range")
