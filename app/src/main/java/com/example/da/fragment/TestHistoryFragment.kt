@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.da.R
@@ -16,14 +17,11 @@ import com.example.da.activity.MainActivity
 import com.example.da.adapter.TestHistoryAdapter
 import com.example.da.database.DatabaseHelper
 
+
 class TestHistoryFragment : Fragment() {
 
     private var testId: Int = -1
     private lateinit var dbHelper: DatabaseHelper
-
-    // ===============================================
-    // BƯỚC 2: THÊM KHAI BÁO CHO SESSION MANAGER
-    // ===============================================
     private lateinit var sessionManager: SessionManager
 
     // Khai báo các View
@@ -32,7 +30,6 @@ class TestHistoryFragment : Fragment() {
     private lateinit var rvTestHistory: RecyclerView
     private lateinit var btnStartTest: Button
     private lateinit var btnViewAllHistory: Button
-
     private lateinit var btnPracticeTest: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,13 +48,11 @@ class TestHistoryFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        // Khởi tạo các helper
         dbHelper = DatabaseHelper(requireContext())
-
-        // ===============================================
-        // BƯỚC 3: KHỞI TẠO SESSION MANAGER
-        // ===============================================
         sessionManager = SessionManager(requireContext())
 
+        // Gán view và thiết lập sự kiện
         setControl(view)
         setEvent()
     }
@@ -72,22 +67,32 @@ class TestHistoryFragment : Fragment() {
     }
 
     private fun setEvent() {
+        if (testId == -1) {
+            Toast.makeText(context, "Lỗi: ID đề thi không hợp lệ.", Toast.LENGTH_SHORT).show()
+            parentFragmentManager.popBackStack()
+            return
+        }
+
+        val test = dbHelper.getTestById(testId)
+        if (test == null) {
+            Toast.makeText(context, "Lỗi: Không tìm thấy thông tin đề thi.", Toast.LENGTH_SHORT).show()
+            parentFragmentManager.popBackStack()
+            return
+        }
+
+        tvTestTitle.text = test.name
 
         if (sessionManager.getUserRole() == "admin") {
-            // Nếu là admin, ẩn nút "Làm bài" đi
             btnStartTest.visibility = View.GONE
             btnPracticeTest.visibility = View.GONE
         } else {
-            // Nếu không phải admin (là user), thì hiện nút đó lên
             btnStartTest.visibility = View.VISIBLE
             btnPracticeTest.visibility = View.VISIBLE
         }
 
-        val test = dbHelper.getTestById(testId)
-        tvTestTitle.text = test?.name ?: "Lịch sử làm bài"
-
         val testResults = dbHelper.getTestResults(testId)
         val adapter = TestHistoryAdapter(testResults) { result ->
+            // ĐẢM BẢO TRUYỀN ĐÚNG result.id (là resultId)
             val viewAnswersFragment = ViewAnswersFragment.newInstance(result.id)
             parentFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, viewAnswersFragment)
@@ -97,9 +102,11 @@ class TestHistoryFragment : Fragment() {
         rvTestHistory.adapter = adapter
         rvTestHistory.layoutManager = LinearLayoutManager(context)
 
+        // 6. Thiết lập sự kiện cho các nút
         ivBack.setOnClickListener {
             parentFragmentManager.popBackStack()
         }
+
         btnPracticeTest.setOnClickListener {
             val practiceTestFragment = PracticeTestFragment.newInstance(testId)
             parentFragmentManager.beginTransaction()
@@ -107,7 +114,6 @@ class TestHistoryFragment : Fragment() {
                 .addToBackStack(null)
                 .commit()
         }
-
 
         btnStartTest.setOnClickListener {
             val doTestFragment = DoTestFragment.newInstance(testId)
@@ -118,12 +124,15 @@ class TestHistoryFragment : Fragment() {
         }
 
         btnViewAllHistory.setOnClickListener {
+            // Chuyển đến màn hình lịch sử chung
             parentFragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, HistoryFragment())
                 .addToBackStack(null)
                 .commit()
         }
     }
+
+    // --- Quản lý vòng đời Fragment ---
 
     override fun onResume() {
         super.onResume()

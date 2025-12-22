@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F7FA"
+    android:background="@color/app_background_cream"
     tools:context=".fragment.PracticeTestFragment">
 
     <!-- Header -->
@@ -25,9 +25,10 @@
                 android:id="@+id/ivBack"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_back"
+                android:layout_gravity="start|center_vertical"
                 android:padding="8dp"
-                android:layout_gravity="start|center_vertical"/>
+                android:src="@drawable/ic_back"
+                app:tint="@color/app_title_text_moss" />
 
             <TextView
                 android:id="@+id/tvTitle"
@@ -35,6 +36,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="Thi thử"
+                android:textColor="@color/app_title_text_moss"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
@@ -48,7 +50,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:textColor="@color/black"
+        android:textColor="@color/app_title_text_moss"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
@@ -62,7 +64,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
-        android:progressTint="#3D4AFA"
+        android:progressTint="@color/app_accent_mustard"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@id/tvQuestionNumber"
         app:layout_constraintTop_toBottomOf="@id/tvQuestionNumber"
@@ -74,18 +76,21 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
+        app:cardBackgroundColor="@android:color/white"
         app:cardCornerRadius="12dp"
-        app:cardElevation="4dp"
+        app:cardElevation="2dp"
         app:layout_constraintEnd_toEndOf="@id/progressBar"
         app:layout_constraintStart_toStartOf="@id/progressBar"
-        app:layout_constraintTop_toBottomOf="@id/progressBar">
+        app:layout_constraintTop_toBottomOf="@id/progressBar"
+        app:strokeColor="#DDD"
+        app:strokeWidth="1dp">
 
         <TextView
             android:id="@+id/tvQuestionText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="16dp"
-            android:textColor="@color/black"
+            android:textColor="@color/app_subtext_dark_brown"
             android:textSize="18sp"
             tools:text="Đây là nội dung của câu hỏi. Câu hỏi có thể khá dài và chiếm nhiều dòng?" />
     </com.google.android.material.card.MaterialCardView>
@@ -99,7 +104,7 @@
         app:layout_constraintEnd_toEndOf="@id/questionCard"
         app:layout_constraintStart_toStartOf="@id/questionCard"
         app:layout_constraintTop_toBottomOf="@id/questionCard">
-        <!-- RadioButtons for answers will be added dynamically -->
+        <!-- RadioButtons/CheckBoxes for answers will be added dynamically -->
     </RadioGroup>
 
     <!-- Show Answer Button -->
@@ -110,9 +115,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="Xem đáp án"
-        android:textColor="#FF5722"
+        android:textColor="@color/app_card_coral"
         app:icon="@drawable/ic_visibility"
-        app:iconTint="#FF5722"
+        app:iconTint="@color/app_card_coral"
         app:layout_constraintStart_toStartOf="@id/rgAnswers"
         app:layout_constraintTop_toBottomOf="@id/rgAnswers" />
 
@@ -121,13 +126,13 @@
         android:id="@+id/navigationLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:orientation="horizontal"
         android:paddingTop="16dp"
         android:paddingBottom="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:gravity="center">
+        app:layout_constraintStart_toStartOf="parent">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnPrevious"
@@ -136,7 +141,9 @@
             android:layout_height="wrap_content"
             android:text="Câu trước"
             android:textAllCaps="false"
-            app:cornerRadius="8dp" />
+            android:textColor="@color/app_title_text_moss"
+            app:cornerRadius="12dp"
+            app:strokeColor="@color/app_title_text_moss" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnNext"
@@ -146,8 +153,9 @@
             android:layout_marginStart="32dp"
             android:text="Câu tiếp"
             android:textAllCaps="false"
-            app:backgroundTint="#3D4AFA"
-            app:cornerRadius="8dp" />
+            android:textColor="@color/app_subtext_dark_brown"
+            app:backgroundTint="@color/app_accent_mustard"
+            app:cornerRadius="12dp" />
 
     </LinearLayout>
 
