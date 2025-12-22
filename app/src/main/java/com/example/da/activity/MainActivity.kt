@@ -41,9 +41,7 @@ class MainActivity : AppCompatActivity() {
 
         setEvent()
 
-        // =================================================================
-        // ===== XỬ LÝ YÊU CẦU ĐIỀU HƯỚNG TỪ RESULT_ACTIVITY (CẬP NHẬT) =====
-        // =================================================================
+
         val navigateTo = intent.getStringExtra("NAVIGATE_TO")
         if (navigateTo == "HISTORY_FRAGMENT") {
             // Nếu có yêu cầu mở lịch sử, thì mở HistoryFragment
